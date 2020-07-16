@@ -1,0 +1,40 @@
+<%= form_with(model: order, local: true) do %>
+  <!-- Hidden fields -->
+  <div>
+    <%= hidden_field_tag :price, @cart.total_price, id: 'price' %>
+    <%= hidden_field_tag :sender_hash, nil, id: 'sender-hash' %>
+    <%= hidden_field_tag :session_id, @session_id, id: 'session-id' %>    
+    <%= hidden_field_tag :card_token, nil, id: 'card-token' %>
+  </div>
+  <!-- Error message -->
+  <% if order.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(order.errors.count, "error") %> prohibited this order from being saved:</h2>
+      <ul>
+        <% order.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Dados pessoais: sem dados pessoais aqui, usar os do devise -->
+
+  <!-- Dados de pagamento -->
+  <div id="pay-type-component"></div>
+
+  <div>
+    <%= button_tag('Finalizar pedido', type: 'button', id: 'buy-button') %>
+  </div>
+
+<% end %>
+
+
+<!-- 
+<#%= form_with(model: order, local: true) do |f| %>
+  <#%= f.text_field :name %>
+  <#%= f.text_field :address %>
+  <#%= f.email_field :email %>
+  <#%= f.select :pay_type, Order.pay_types.keys, id: 'order-pay-type', prompt: 'Selecione um método de pagamento' %>
+  <#%= f.submit :Enviar %>
+<#% end %> -->
