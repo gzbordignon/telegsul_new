@@ -1,0 +1,17 @@
+<!-- <h1>New Test</h1>
+
+<#%= render 'form', test: @test %>
+
+<#%= link_to 'Back', tests_path %> -->
+
+
+<form name="boleto_form" action="" id="boleto-form">
+	<%= csrf_meta_tag %>
+	<input type="hidden" name="sender_hash" id="sender-hash">
+	<input type="text" name="name" id="name" value="Guilherme Bordignon" required>
+  <input type="text" name="cpf" id="cpf" value="03310782018" required>
+  <input type="submit" name="buy_button" id="buy-button" value="Comprar">
+</form>
+
+
+<a id="payment-link" style="display: none">Imprimir boleto</a>

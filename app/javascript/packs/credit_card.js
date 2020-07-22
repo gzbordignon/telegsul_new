@@ -1,20 +1,36 @@
-// document.addEventListener("DOMContentLoaded", function() {
+// document.addEventListener("turbolinks:load", function() {
 
 // 	PagSeguroDirectPayment.setSessionId(document.querySelector('#session-id').value);
 
+
 // 	document.querySelector('#card-number').addEventListener('input', getCardInput);
 
-// 	document.querySelector('#buy-button').addEventListener('click', function() {
-// 		sendHashToHiddenInput();
-// 		sendCardTokenToHiddenInput();
-// 		submitForm();
+// 	document.querySelectorAll('button').forEach(button => {
+// 		button.addEventListener('click', () => {
+// 			if (button.id === 'submit-boleto-form') {
+// 				sendHashToHiddenInput();
+// 				submitForm(button);
+// 			}
+// 			else if (button.id === 'submit-card-form') {
+// 				sendHashToHiddenInput();
+// 				sendCardTokenToHiddenInput();
+// 				submitForm(button);
+// 			}
+// 		})
+// 	})
 
-// 	});
+// 	// document.querySelector('#submit-card-form').addEventListener('click', function() {
+// 	// 	sendHashToHiddenInput();
+// 	// 	sendCardTokenToHiddenInput();
+// 	// 	submitForm();
+
+// 	// });
 
 // })
 
-// function submitForm() {
-// 	setTimeout(function() { document.querySelector('form').submit() }, 5000);
+
+// function submitForm(button) {
+// 	setTimeout(function() { button.form.submit() }, 2000);
 // }
 
 
@@ -79,7 +95,6 @@
 // 		expirationYear: document.querySelector('#expiration-year').value,
 // 		success: function(response) {
 // 			document.querySelector('#card-token').value = response['card']['token'];
-// 			document.querySelector('#buy-button').style.display = 'block';
 // 		},
 // 		error: function(response) {
 // 			alert('As informações do cartão estão incorretas.')
@@ -88,5 +103,4 @@
 	
 // 	PagSeguroDirectPayment.createCardToken(params)
 // }
-
 

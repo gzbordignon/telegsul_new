@@ -1,8 +1,10 @@
 class OrdersController < ApplicationController
   include CurrentCart
+  include Payment
   before_action :set_cart, only: [:new, :create]
   before_action :ensure_cart_isnt_empty, only: :new
   before_action :set_order, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
   # skip_before_action :verify_authenticity_token
 
   # GET /orders
@@ -19,7 +21,7 @@ class OrdersController < ApplicationController
   # GET /orders/new
   def new
     @order = Order.new
-
+    # @session_id = (PagSeguro::Session.create).id
   end
 
   # GET /orders/1/edit
@@ -29,17 +31,28 @@ class OrdersController < ApplicationController
   # POST /orders
   # POST /orders.json
   def create
-    @order = Order.new(order_params)
+    puts params[:order][:shipping_attributes]
+
+    # if params[:pay_type] == 'boleto'
+      # payment = PagSeguro::BoletoTransactionRequest.new
+      # boleto(payment, @cart, params[:sender_hash])
+    # elsif params[:pay_type] == 'credit_card'
+      # payment = PagSeguro::CreditCardTransactionRequest.new
+      # credit_card(payment, @cart, params[:sender_hash], params[:card_token], params[:price], params[:card_options])
+    # end
+
+    @order = current_user.orders.new(
+      order_params
+      )
     @order.add_line_items_from_cart(@cart)
 
     respond_to do |format|
       if @order.save
         Cart.destroy(session[:cart_id])
         session[:cart_id] = nil
-        format.html { redirect_to new_order_payment_path(@order), notice: 
-          'Thank you for your order.' }
-        format.json { render :show, status: :created,
-          location: @order }
+        format.html { 
+        }
+        format.json { render json: @order }
       else
         format.html { render :new }
         format.json { render json: @order.errors,
@@ -80,7 +93,7 @@ class OrdersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def order_params
-      params.require(:order).permit(:name, :email, :address, :pay_type)
+      params.require(:order).permit(:pay_type, :status, :shipping, :shipping_id, :user_id, :link, shipping_attributes: [:city])
     end
 
     def ensure_cart_isnt_empty

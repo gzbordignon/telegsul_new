@@ -1,54 +1,59 @@
-
-<%= form_with(model: [@order, @order.payments.build], local: true) do %>
+<!-- 
+<#%= form_with(model: [@order, @order.payments.build], local: true) do %>
   <div>
-    <%= hidden_field_tag :price, @order.total_price, id: 'price' %>
-    <%= hidden_field_tag :sender_hash, nil, id: 'sender-hash' %>
-    <%= hidden_field_tag :session_id, @session_id, id: 'session-id' %>    
-    <%= hidden_field_tag :card_token, nil, id: 'card-token' %>
+    <#%= hidden_field_tag :price, @order.total_price, id: 'price' %>
+    <#%= hidden_field_tag :sender_hash, nil, id: 'sender-hash' %>
+    <#%= hidden_field_tag :session_id, @session_id, id: 'session-id' %>    
+    <#%= hidden_field_tag :card_token, nil, id: 'card-token' %>
   </div>
   <fieldset>
     <legend>Dados do Cartão</legend>
     <div>
-      <%= label_tag :card_name, 'Nome do Titular' %>
-      <%= text_field_tag('card_name', nil,  id: 'card-name', required: true) %>
+      <#%= label_tag :card_name, 'Nome do Titular' %>
+      <#%= text_field_tag('card_name', nil,  id: 'card-name', required: true) %>
     </div>
     <div>
-      <%= label_tag :card_document, 'CPF/CNPJ do Titular' %>
-      <%= text_field_tag('card_document', nil, id: 'card-document', required: true) %>
+      <#%= label_tag :card_document, 'CPF/CNPJ do Titular' %>
+      <#%= text_field_tag('card_document', nil, id: 'card-document', required: true) %>
     </div>
     <div>
     </div>
     <div>
-      <%= label_tag :area_code, 'DDD' %>
-      <%= text_field_tag('area_code', nil, id: 'area-code', required: true) %>
+      <#%= label_tag :area_code, 'DDD' %>
+      <#%= text_field_tag('area_code', nil, id: 'area-code', required: true) %>
     </div>
     <div>
-      <%= label_tag :phone_number, 'Número do telefone' %>
-      <%= text_field_tag('phone_number', nil, id: 'phone-number', required: true) %>
+      <#%= label_tag :phone_number, 'Número do telefone' %>
+      <#%= text_field_tag('phone_number', nil, id: 'phone-number', required: true) %>
     </div>
     <div>
-      <%= label_tag :card_number, 'Número do Cartão' %>
-      <%= text_field_tag('card_number', nil, id: 'card-number', required: true) %>
+      <#%= label_tag :card_number, 'Número do Cartão' %>
+      <#%= text_field_tag('card_number', nil, id: 'card-number', required: true) %>
     </div>
     <div>
-      <%= label_tag :expiration_date, 'Data de Validade' %>
-      <%= select_month(Date.today, {use_month_names: %w(Janeiro Fevereiro Março Abril Maio Junho Julho Agosto Setembro Outubro Novembro Dezembro)}, id: 'expiration-month', name: 'expiration_month') %>
-      <%= select_year(Date.today, {start_year: Date.current.year - 10, end_year: Date.current.year + 10}, id: 'expiration-year', name: 'expiration_year') %>
+      <#%= label_tag :expiration_date, 'Data de Validade' %>
+      <#%= select_month(Date.today, {use_month_names: %w(Janeiro Fevereiro Março Abril Maio Junho Julho Agosto Setembro Outubro Novembro Dezembro)}, id: 'expiration-month', name: 'expiration_month') %>
+      <#%= select_year(Date.today, {start_year: Date.current.year - 10, end_year: Date.current.year + 10}, id: 'expiration-year', name: 'expiration_year') %>
     </div>
     <div id="card-cvv-box" style="display: none">
-      <%= label_tag :card_cvv, 'Código de Segurança' %>
-      <%= text_field_tag :card_cvv, nil, id: 'card-cvv', required: true %>
+      <#%= label_tag :card_cvv, 'Código de Segurança' %>
+      <#%= text_field_tag :card_cvv, nil, id: 'card-cvv', required: true %>
     </div>
     <div id="card-options-box" style="display: none">
-      <%= label_tag :card_options, 'Opções de Parcelamentos' %>
-      <%= select_tag :card_options, nil, id: 'card-options'  %> 
+      <#%= label_tag :card_options, 'Opções de Parcelamentos' %>
+      <#%= select_tag :card_options, nil, id: 'card-options'  %> 
     </div>
     <div>
       <button type="button" id="buy-button">Finalizar Pagamento</button>
-      <!-- # <#%= submit_tag('Finalizar Pagamento', id: 'buy-button') %> -->
+      # <#%= submit_tag('Finalizar Pagamento', id: 'buy-button') %> -->
      <!--  <button id="buy-button">Finalizar Pagamento</button> -->
-    </div>
+<!--     </div>
   </fieldset>
 
-<% end %>
+<#% end %> -->
 
+
+<form action="" id="boleto-form">
+  <input type="text" id="cpf" value="03310782018">
+  <input type="submit" id="buy-button" value="Comprar">
+</form>

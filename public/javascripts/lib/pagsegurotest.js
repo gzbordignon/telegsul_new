@@ -1,15 +1,19 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-	PagSeguroDirectPayment.setSessionId(document.querySelector('#session-id').value);
+	document.querySelector('#pay_type').addEventListener('click', function() {
+		console.log("hello");
+	})
 
-	document.querySelector('#card-number').addEventListener('input', getCardInput);
+	// PagSeguroDirectPayment.setSessionId(document.querySelector('#session-id').value);
 
-	document.querySelector('#buy-button').addEventListener('click', function() {
-		sendHashToHiddenInput();
-		sendCardTokenToHiddenInput();
-		submitForm();
+	// document.querySelector('#card-number').addEventListener('input', getCardInput);
 
-	});
+	// document.querySelector('#buy-button').addEventListener('click', function() {
+	// 	sendHashToHiddenInput();
+	// 	sendCardTokenToHiddenInput();
+	// 	submitForm();
+
+	// });
 
 })
 
