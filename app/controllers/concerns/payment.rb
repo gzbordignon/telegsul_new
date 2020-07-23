@@ -175,9 +175,7 @@ module Payment
 
     end
 
-    def gerar_boleto(cart, sender_hash)
-
-      payment = PagSeguro::BoletoTransactionRequest.new
+    def gerar_boleto(payment, cart, sender_hash)
 
       payment.notification_url = "https://telegsul.herokuapp.com/notification"
 

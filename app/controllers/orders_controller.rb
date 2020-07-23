@@ -40,8 +40,8 @@ class OrdersController < ApplicationController
     # end
 
     if params[:pay_type] == 'boleto'
-      
-      gerar_boleto(@cart, params[:sender_hash]) #retorna payment
+      payment = PagSeguro::BoletoTransactionRequest.new
+      gerar_boleto(payment, @cart, params[:sender_hash]) #retorna payment
     end
 
     @order = current_user.orders.new(
