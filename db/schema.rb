@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_22_123903) do
+ActiveRecord::Schema.define(version: 2020_07_23_203130) do
 
   create_table "carts", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 2020_07_22_123903) do
     t.integer "shipping_id"
     t.integer "user_id"
     t.string "link"
+    t.string "reference"
   end
 
   create_table "payments", force: :cascade do |t|

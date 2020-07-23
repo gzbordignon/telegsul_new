@@ -40,8 +40,8 @@ class OrdersController < ApplicationController
     # end
 
     if params[:pay_type] == 'boleto'
-      payment = PagSeguro::BoletoTransactionRequest.new
-      gerar_boleto(payment, @cart, params[:sender_hash])
+      
+      gerar_boleto(@cart, params[:sender_hash]) #retorna payment
     end
 
     @order = current_user.orders.new(
@@ -101,7 +101,7 @@ class OrdersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def order_params
-      params.require(:order).permit(:pay_type, :status, :shipping, :shipping_id, :user_id, :link, shipping_attributes: [:city])
+      params.require(:order).permit(:pay_type, :status, :reference, :shipping, :shipping_id, :user_id, :link, shipping_attributes: [:city])
     end
 
     def ensure_cart_isnt_empty
