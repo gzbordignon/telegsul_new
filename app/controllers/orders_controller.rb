@@ -21,7 +21,7 @@ class OrdersController < ApplicationController
   # GET /orders/new
   def new
     @order = Order.new
-    # @session_id = (PagSeguro::Session.create).id
+    @session_id = (PagSeguro::Session.create).id
   end
 
   # GET /orders/1/edit
@@ -31,8 +31,6 @@ class OrdersController < ApplicationController
   # POST /orders
   # POST /orders.json
   def create
-    puts params[:order][:shipping_attributes]
-
     # if params[:pay_type] == 'boleto'
       # payment = PagSeguro::BoletoTransactionRequest.new
       # boleto(payment, @cart, params[:sender_hash])
@@ -41,24 +39,34 @@ class OrdersController < ApplicationController
       # credit_card(payment, @cart, params[:sender_hash], params[:card_token], params[:price], params[:card_options])
     # end
 
+    if params[:pay_type] == 'boleto'
+      payment = PagSeguro::BoletoTransactionRequest.new
+      gerar_boleto(payment, @cart, params[:sender_hash])
+    end
+
     @order = current_user.orders.new(
-      order_params
+      order_params.merge(link: payment.payment_link)
       )
     @order.add_line_items_from_cart(@cart)
+
+    response = { order: @order, payment: payment }
 
     respond_to do |format|
       if @order.save
         Cart.destroy(session[:cart_id])
         session[:cart_id] = nil
-        format.html { 
-        }
-        format.json { render json: @order }
+        format.html { redirect_to order_boleto_path(@order) }
+        # format.json { render json: payment }
+        format.json { render json: response}
       else
         format.html { render :new }
         format.json { render json: @order.errors,
           status: :unprocessable_entity }
       end
     end
+  end
+
+  def boleto
   end
 
   # PATCH/PUT /orders/1

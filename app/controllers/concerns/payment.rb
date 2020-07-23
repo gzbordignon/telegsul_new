@@ -175,7 +175,7 @@ module Payment
 
     end
 
-    def boleto(payment, cart, sender_hash)
+    def gerar_boleto(payment, cart, sender_hash)
       payment.payment_mode = "default"
 
       items(cart, payment)
@@ -191,6 +191,8 @@ module Payment
       payment.create
 
       errors(payment)
+
+      payment
 
     end
 
