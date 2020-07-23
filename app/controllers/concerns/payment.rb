@@ -183,8 +183,8 @@ module Payment
 
       items(cart, payment)
 
-      payment.reference = "REF1234-boleto"
-
+      payment.reference = "REF_#{(0...8).map { (65 + rand(26)).chr }.join}_#{cart.id}" 
+    
       sender_boleto(payment, sender_hash)
 
       shipping_address(payment)

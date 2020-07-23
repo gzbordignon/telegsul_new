@@ -45,7 +45,7 @@ class OrdersController < ApplicationController
     end
 
     @order = current_user.orders.new(
-      order_params.merge(link: payment.payment_link)
+      order_params.merge(link: payment.payment_link, status: 'pending', reference: payment.reference)
       )
     @order.add_line_items_from_cart(@cart)
 
