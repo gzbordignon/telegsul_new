@@ -1,0 +1,53 @@
+<div id="credit-card-form-container" style="display: none;">
+  <%= form_with(model: order, local: true, html: {id: 'credit-card-form'}) do |f| %>
+  <!-- Hidden fields -->
+    <%= hidden_field_tag :price, @cart.all_line_items_total_price, id: 'price' %>
+    <%= hidden_field_tag :sender_hash_card, nil, id: 'sender-hash-credit-card' %>
+    <%= hidden_field_tag :session_id, @session_id, id: 'session-id' %>    
+    <%= hidden_field_tag :card_token, nil, id: 'card-token' %>
+    <%= hidden_field_tag :pay_type, 'credit_card' %>
+
+    <!-- Error message -->
+     <% if order.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(order.errors.count, "error") %> prohibited this order from being saved:</h2>
+        <ul>
+          <% order.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %> 
+
+    <!-- Dados de pagamento -->
+    <legend>Dados do Cartão</legend>
+    <div>
+      <%= label_tag :card_name, 'Nome do Titular' %>
+      <%= text_field_tag('card[card_name]', nil,  id: 'card-name') %>
+    </div>
+    <div>
+      <%= label_tag :card_document, 'CPF/CNPJ do Titular' %>
+      <%= text_field_tag('card[card_document]', nil, id: 'card-document') %>
+    </div>
+    <div>
+      <%= label_tag :card_number, 'Número do Cartão' %>
+      <%= text_field_tag('card[card_number]', nil, id: 'card-number') %>
+    </div>
+    <div>
+      <%= label_tag :expiration_date, 'Data de Validade' %>
+      <%= select_month(Date.today, {use_month_names: %w(Janeiro Fevereiro Março Abril Maio Junho Julho Agosto Setembro Outubro Novembro Dezembro)}, id: 'expiration-month', name: 'card[expiration_month]') %>
+      <%= select_year(Date.today, {start_year: Date.current.year - 10, end_year: Date.current.year + 10}, id: 'expiration-year', name: 'card[expiration_year]') %>
+    </div>
+    <div id="card-cvv-box" style="display: none">
+      <%= label_tag :card_cvv, 'Código de Segurança' %>
+      <%= text_field_tag 'card[card_cvv]', nil, id: 'card-cvv' %>
+    </div>
+    <div id="card-options-box" style="display: none">
+      <%= label_tag :card_options, 'Opções de Parcelamentos' %>
+      <%= select_tag 'card[card_options]', nil, id: 'card-options'  %> 
+    </div> 
+    <div>
+      <%= f.submit 'Finalizar pedido', id: 'submit-card-form' %>
+    </div>
+ <% end %>
+</div>

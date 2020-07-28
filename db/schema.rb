@@ -10,7 +10,43 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_23_203130) do
+ActiveRecord::Schema.define(version: 2020_07_28_172814) do
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.integer "record_id", null: false
+    t.integer "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.bigint "byte_size", null: false
+    t.string "checksum", null: false
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "billing_addresses", force: :cascade do |t|
+    t.string "street"
+    t.string "number"
+    t.string "complement"
+    t.string "district"
+    t.string "postal_code"
+    t.string "city"
+    t.string "state"
+    t.string "country"
+    t.integer "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_billing_addresses_on_user_id"
+  end
 
   create_table "carts", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
@@ -24,6 +60,7 @@ ActiveRecord::Schema.define(version: 2020_07_23_203130) do
     t.integer "order_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "art"
     t.index ["cart_id"], name: "index_line_items_on_cart_id"
     t.index ["order_id"], name: "index_line_items_on_order_id"
     t.index ["product_id"], name: "index_line_items_on_product_id"
@@ -35,10 +72,12 @@ ActiveRecord::Schema.define(version: 2020_07_23_203130) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "status"
     t.boolean "shipping"
-    t.integer "shipping_id"
+    t.integer "address_id"
     t.integer "user_id"
     t.string "link"
     t.string "reference"
+    t.integer "billing_address_id"
+    t.integer "shipping_address_id"
   end
 
   create_table "payments", force: :cascade do |t|
@@ -56,18 +95,18 @@ ActiveRecord::Schema.define(version: 2020_07_23_203130) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "shippings", force: :cascade do |t|
+  create_table "shipping_addresses", force: :cascade do |t|
     t.string "street"
     t.string "number"
     t.string "complement"
-    t.string "postal_code"
     t.string "district"
+    t.string "postal_code"
     t.string "city"
     t.string "state"
-    t.integer "order_id", null: false
+    t.string "country"
+    t.integer "order_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["order_id"], name: "index_shippings_on_order_id"
   end
 
   create_table "tests", force: :cascade do |t|
@@ -93,9 +132,10 @@ ActiveRecord::Schema.define(version: 2020_07_23_203130) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "billing_addresses", "users"
   add_foreign_key "line_items", "carts"
   add_foreign_key "line_items", "orders"
   add_foreign_key "line_items", "products"
   add_foreign_key "payments", "orders"
-  add_foreign_key "shippings", "orders"
 end

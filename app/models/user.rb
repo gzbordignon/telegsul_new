@@ -5,4 +5,6 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :orders
+  has_one :billing_address
+  accepts_nested_attributes_for :billing_address
 end

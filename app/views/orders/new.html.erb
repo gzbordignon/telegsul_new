@@ -1,7 +1,26 @@
-<!-- <section class="depot_form">
-  <h1>Please Enter Your Details</h1>
-  
-</section> -->
 
+<div>
+	<%= link_to 'Continuar comprando', root_path %>
+	
+</div>
 
-<%= render 'form', order: @order %>
+<fieldset>
+
+	<%= render 'carts/cart' %>
+
+</fieldset>
+
+<fieldset>
+	<h2>Finalizar Pedido</h2>
+
+	<%= render 'frete' %>
+
+	<%= render 'shipping_form', order: @order %>
+
+	<%= render 'payment_methods' %>
+
+	<%= render 'boleto_form', order: @order%>
+
+	<%= render 'credit_card_form', order: @order %>
+</fieldset>
+

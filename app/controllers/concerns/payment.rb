@@ -2,13 +2,36 @@ module Payment
 
 	private
 
+    def get_status(status)
+      case status
+      when 1
+        'Aguardando Pagamento'
+      when 2
+        'Em Análise'
+      when 3
+        'Pago'
+      when 4
+        'Disponível'
+      when 5
+        'Em Disputa'
+      when 6
+        'Devolvida'
+      when 7
+        'Cancelada'
+      when 8
+        'Debitado'
+      when 9
+        'Retenção Temporária'
+      end
+    end
+
     def serializer(payment)
       puts "=> REQUEST"
       puts PagSeguro::TransactionRequest::RequestSerializer.new(payment).to_params
       puts
     end
 
-    def items(cart, payment)
+    def items(cart, payment, shipping_boolean)
       cart.line_items.each do |item|
         payment.items << {
            id: item.product.id,
@@ -18,37 +41,42 @@ module Payment
            weight: 0
         }
       end
+      if shipping_boolean == 'false'
+        payment.items
+      else
+        payment.items << {id: 0, description: 'frete', 'quantity': 1, amount: 10.0}
+      end
     end
 
-    def sender_info(payment, sender_hash)
+    def sender_info(payment, sender_hash, user)
       payment.sender = {
         hash: sender_hash,
-        name: 'Guilherme Bordignon',
-        email: 'c85440628659073287030@sandbox.pagseguro.com.br',
-        document: { type: 'CPF', value: '03310782018'},
+        name: user.name,
+        email: user.email,
+        document: { type: 'CPF', value: '03310782018'}, # gem do fork é assim, na oficial é só cpf: '03310782018'
         phone: {
-          area_code: '51',
-          number: '995823059'
+          area_code: user.area_code,
+          number: user.phone_number
         }
       }
     end
 
-    def sender_boleto(payment, sender_hash)
+    def sender_boleto(payment, sender_hash, user)
       payment.sender = {
         hash: sender_hash,
-        name: 'Guilherme Bordignon',
-        email: 'c85440628659073287030@sandbox.pagseguro.com.br',
+        name: user.name,
+        email: user.email,
         cpf: '03310782018',
         phone: {
-          area_code: '51',
-          number: '995823059'
+          area_code: user.area_code,
+          number: user.phone_number
         }
       }
     end
 
-    def holder_info(payment)
+    def holder_info(payment, card_info)
       payment.holder = {
-        name: 'Guilherme Bordignon',
+        name: card_info[:card_name],
         birth_date: '10/06/1994',
         document: {
           type: "CPF", value: '03310782018'
@@ -64,35 +92,53 @@ module Payment
       payment.credit_card_token = token
     end
 
-    def shipping_address(payment)
-      payment.shipping = {
-        type_name: "sedex",
-        address: {
-          street: "Lino Estácio dos Santos",
-          number: "1535",
-          complement: "casa 231",
-          city: "Gravataí",
-          state: "RS",
-          district: "Oriçó",
-          postal_code: "94010400"
+    def shipping_address(payment, shipping_address_attributes, shipping_boolean)
+      if shipping_boolean == 'false'
+        payment.shipping = {
+          type_id: 3,
+          address: {
+            street: 'Rua Eufrásio Nunes',
+            number: '60',
+            complement: 'Casa',
+            postal_code: '94010120',
+            district: 'Centro',
+            city: 'Gravataí',
+            state: 'RS'
+          }
         }
-      }
+      else
+        payment.shipping = {
+          type_id: 3,
+          address: {
+            street: shipping_address_attributes[:street],
+            number: shipping_address_attributes[:number],
+            complement: shipping_address_attributes[:complement],
+            postal_code: shipping_address_attributes[:postal_code],
+            district: shipping_address_attributes[:district],
+            city: shipping_address_attributes[:city],
+            state: 'RS'
+          }
+        }
+      end
     end
 
 
-    def billing_address(payment)
+    def billing_address(payment, user)
       payment.billing_address = {
-        street: "Lino Estácio dos Santos",
-        number: "1535",
-        complement: "casa 231",
-        city: "Gravataí",
-        state: "RS",
-        district: "Oriçó",
-        postal_code: "94010400"
+        street: user.billing_address.street,
+        number: user.billing_address.number,
+        complement: user.billing_address.complement,
+        district: user.billing_address.district,
+        postal_code: user.billing_address.postal_code,
+        city: user.billing_address.city,
+        state: user.billing_address.state
       }
     end
 
-    def installments(payment, price, card_options)
+    def installments(payment, card_options)
+      items_array = []
+      payment.items.each { |item| items_array << item.amount.to_f}
+      price = items_array.inject(:+)
       payment.installment = {
         value: price,
         quantity: card_options
@@ -144,28 +190,31 @@ module Payment
         puts "      country: #{payment.shipping.address.country}"
         puts "      type: #{payment.shipping.type_name}"
         puts "      cost: #{payment.shipping.cost}"
+        items_array = []
+        payment.items.each { |item| items_array << item.amount.to_f }
+        puts items_array.inject(:+)
       end
     end
 
-  	def credit_card(payment, cart, sender_hash, token, price, card_options)
+  	def credit_card_payment(payment, cart, sender_hash, token, card_options, shipping_boolean, order, user, shipping_address_attributes, card_info)
       
       payment.payment_mode = "gateway"
 
-      items(cart, payment)
+      items(cart, payment, shipping_boolean)
 
-      payment.reference = "REF1234-credit-card"
+      payment.reference = "REF-credit-card-" + (order.last.id + 1).to_s
 
-      sender_info(payment, sender_hash)
+      sender_info(payment, sender_hash, user)
 
-      holder_info(payment)
+      holder_info(payment, card_info)
 
       card_token(payment, token)
 
-      shipping_address(payment)
+      shipping_address(payment, shipping_address_attributes, shipping_boolean)
 
-      billing_address(payment)
+      billing_address(payment, user)
 
-      installments(payment, price, card_options)
+      installments(payment, card_options)
 
       serializer(payment)
 
@@ -175,19 +224,20 @@ module Payment
 
     end
 
-    def gerar_boleto(payment, cart, sender_hash)
+    def gerar_boleto(payment, cart, sender_hash, shipping_boolean, shipping_address_attributes, order, user)
 
-      payment.notification_url = "https://telegsul.herokuapp.com/notification"
+      # payment.notification_url = "https://telegsul.herokuapp.com/notification"
+      payment.notification_url = "http://localhost:3000/notification"
 
       payment.payment_mode = "default"
 
-      items(cart, payment)
+      items(cart, payment, shipping_boolean)
 
-      payment.reference = "REF_#{(0...8).map { (65 + rand(26)).chr }.join}_#{cart.id}" 
+      payment.reference = "REF-boleto-" + (order.last.id + 1).to_s
     
-      sender_boleto(payment, sender_hash)
+      sender_boleto(payment, sender_hash, user)
 
-      shipping_address(payment)
+      shipping_address(payment, shipping_address_attributes, shipping_boolean)
 
       serializer(payment)
 

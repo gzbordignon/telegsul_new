@@ -1,106 +1,104 @@
-// document.addEventListener("turbolinks:load", function() {
+$(document).ready(function() {
 
-// 	PagSeguroDirectPayment.setSessionId(document.querySelector('#session-id').value);
+	PagSeguroDirectPayment.setSessionId($("#session-id").val());
 
-
-// 	document.querySelector('#card-number').addEventListener('input', getCardInput);
-
-// 	document.querySelectorAll('button').forEach(button => {
-// 		button.addEventListener('click', () => {
-// 			if (button.id === 'submit-boleto-form') {
-// 				sendHashToHiddenInput();
-// 				submitForm(button);
-// 			}
-// 			else if (button.id === 'submit-card-form') {
-// 				sendHashToHiddenInput();
-// 				sendCardTokenToHiddenInput();
-// 				submitForm(button);
-// 			}
-// 		})
-// 	})
-
-// 	// document.querySelector('#submit-card-form').addEventListener('click', function() {
-// 	// 	sendHashToHiddenInput();
-// 	// 	sendCardTokenToHiddenInput();
-// 	// 	submitForm();
-
-// 	// });
-
-// })
+	$('#card-number').on('keyup', checkCardNumber);
 
 
-// function submitForm(button) {
-// 	setTimeout(function() { button.form.submit() }, 2000);
-// }
+
+	$('#credit-card-form').on('submit', function(e) {
+		e.preventDefault();
+
+		$('#sender-hash-credit-card').val(PagSeguroDirectPayment.getSenderHash());
+
+		sendCardTokenToHiddenInput();
+
+		const shippingForm = $('#shipping-form');
+		const creditCardForm = $('#credit-card-form');
+
+		// setTimeout(function() {
+			// console.log(shippingForm.serialize())
+		// }, 3000)
+
+		setTimeout(function() {
+			$.ajax({
+				method: 'POST',
+				url: '/orders.json', // isso tá mandando pro format.json
+				data: shippingForm.serialize() + "&&" + creditCardForm.serialize(),
+				dataType: 'json',
+				success: function(response) {
+					console.log(JSON.stringify(response))
+					// console.log(JSON.stringify(response.order.id));
+					// console.log(JSON.stringify(response));
+					// setTimeout(function() {
+					// 	window.location.href = `/orders/${response.order.id}`;
+					// }, 5000);
+				},
+				error: function(response) {
+					console.log('wtf' + JSON.stringify(response));
+				}
+			})
+		}, 3000)
+
+	})
+})
 
 
-// function getCardInput() {
-// 	let cardNumber = document.querySelector('#card-number')
-// 	PagSeguroDirectPayment.getBrand({
-// 		cardBin: cardNumber.value,
-// 		success: function(response) {
-// 			console.log(response);
-// 			if(response['brand']['cvvSize'] > 0) {
-// 				showCvv();
-// 				getPaymentOptions(response['brand']['name'], document.querySelector('#price').value);
-// 				showPaymentOptions();
-// 			}
-// 		},
-// 		error: function(response) {
-// 			console.log(response)
-// 		}
-// 	})	
-// }
+function checkCardNumber() {
+	PagSeguroDirectPayment.getBrand({
+		cardBin: $(this).val(),
+		success: function(response) {
+			console.log(response);
+			if(response['brand']['cvvSize'] > 0) {
+				$('#card-cvv-box').show();
+				getPaymentOptions(response['brand']['name'], $('#price').val());
+				$('#card-options-box').show();
+			}
+		},
+		error: function(response) {
+			console.log(response)
+		}
+	})	
+}
 
-// function showCvv() {
-// 	document.querySelector('#card-cvv-box').style.display = 'block';
-// }
 
-// function getPaymentOptions(flag, price) {
-//   PagSeguroDirectPayment.getInstallments({
-//     amount: price,
-//     brand: flag,
-//     success: function(response) {
-//       // cardOptions = document.querySelector('#card-options');
-//       installments = response['installments'][flag]
-//         .forEach(function(value) {
-//           option = document.createElement('option');
-//           option.textContent = "$"+value['installmentAmount']+" x "+value['quantity']+" - total: $"+value['totalAmount'];
-//           option.value = value['quantity'];
-//           document.querySelector('#card-options').appendChild(option);
-//       })
-//     },
-//     error: function(response) {
-//       console.log(response);
-//     },
-//     complete: function(response) {
-//       console.log(response);
-//     }
-//   })
-// }
 
-// function showPaymentOptions() {
-// 	document.querySelector('#card-options-box').style.display = 'block';
-// }
+function getPaymentOptions(flag, price) {
+  PagSeguroDirectPayment.getInstallments({
+    amount: price,
+    brand: flag,
+    success: function(response) {
+      // cardOptions = document.querySelector('#card-options');
+      installments = response['installments'][flag]
+        .forEach(function(value) {
+          const option = document.createElement('option');
+          option.textContent = "R$ " + value['installmentAmount']+" x "+value['quantity']+" - total: R$ "+value['totalAmount'];
+          option.value = value['quantity'];
+          document.querySelector('#card-options').appendChild(option);
+      })
+    },
+    error: function(response) {
+      console.log(response);
+    },
+    complete: function(response) {
+      console.log(response);
+    }
+  })
+}
 
-// function sendHashToHiddenInput() {
-// 	document.querySelector('#sender-hash').value = PagSeguroDirectPayment.getSenderHash();
-// }
-
-// function sendCardTokenToHiddenInput() {
-// 	var params = {
-// 		cardNumber: document.querySelector('#card-number').value, // 4111111111111111 c85440628659073287030@sandbox.pagseguro.com.br
-// 		cvv: document.querySelector('#card-cvv').value,
-// 		expirationMonth: document.querySelector('#expiration-month').value,
-// 		expirationYear: document.querySelector('#expiration-year').value,
-// 		success: function(response) {
-// 			document.querySelector('#card-token').value = response['card']['token'];
-// 		},
-// 		error: function(response) {
-// 			alert('As informações do cartão estão incorretas.')
-// 		}
-// 	}
+function sendCardTokenToHiddenInput() {
+	const params = {
+		cardNumber: $('#card-number').val(), // 4111111111111111 c85440628659073287030@sandbox.pagseguro.com.br
+		cvv: $('#card-cvv').val(),
+		expirationMonth: $('#expiration-month').val(),
+		expirationYear: $('#expiration-year').val(),
+		success: function(response) {
+			$('#card-token').val(response['card']['token']);
+		},
+		error: function(response) {
+			alert('As informações do cartão estão incorretas.')
+		}
+	}
 	
-// 	PagSeguroDirectPayment.createCardToken(params)
-// }
-
+	PagSeguroDirectPayment.createCardToken(params)
+}

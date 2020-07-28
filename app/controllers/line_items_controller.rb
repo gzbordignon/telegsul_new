@@ -26,9 +26,13 @@ class LineItemsController < ApplicationController
   # POST /line_items
   # POST /line_items.json
   def create
+    puts params[:art].to_i
+
     @line_item = @cart.add_product(
       product_id: params[:product_id],
-      quantity: params[:quantity]
+      quantity: params[:quantity],
+      art: params[:art],
+      images: params[:images]
     )
 
     redirect_to cart_path(@cart)
@@ -37,15 +41,37 @@ class LineItemsController < ApplicationController
   # PATCH/PUT /line_items/1
   # PATCH/PUT /line_items/1.json
   def update
+    # respond_to do |format|
+    #   if @line_item.update(line_item_params)
+    #     format.html { redirect_to @line_item, notice: 'Line item was successfully updated.' }
+    #     format.json { render :show, status: :ok, location: @line_item }
+    #   else
+    #     format.html { render :edit }
+    #     format.json { render json: @line_item.errors, status: :unprocessable_entity }
+    #   end
+    # end
+    # @line_item = LineItem.find(params[:id])
+    # @line_item.update(quantity: params[:quantity])
+
+    @line_item = LineItem.find(params[:id])
+    
+
     respond_to do |format|
-      if @line_item.update(line_item_params)
-        format.html { redirect_to @line_item, notice: 'Line item was successfully updated.' }
-        format.json { render :show, status: :ok, location: @line_item }
-      else
-        format.html { render :edit }
-        format.json { render json: @line_item.errors, status: :unprocessable_entity }
+      if @line_item.update(quantity: params[:quantity])
+        format.json { render json: @line_item }
       end
     end
+
+  end
+
+  def increase_qty
+    @line_item = LineItem.find(params[:id])
+    @line_item.quantity += 1
+    @line_item.save
+  end
+
+  def decrease_qty
+
   end
 
   # DELETE /line_items/1
@@ -53,7 +79,7 @@ class LineItemsController < ApplicationController
   def destroy
     @line_item.destroy
     respond_to do |format|
-      format.html { redirect_to line_items_url, notice: 'Line item was successfully destroyed.' }
+      format.html { }
       format.json { head :no_content }
     end
   end
@@ -66,6 +92,6 @@ class LineItemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def line_item_params
-      params.require(:line_item).permit(:quantity, :product_id)
+      params.require(:line_item).permit(:quantity, :product_id, images: [])
     end
 end

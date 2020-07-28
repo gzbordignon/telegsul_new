@@ -1,17 +1,17 @@
 Rails.application.routes.draw do
   
-  get 'notification/create'
-  resources :tests
-  devise_for :users, controllers: {
-  	registrations: 'registrations'
-  }
-  resources :line_items
   root to: 'store#index'
-  resources :orders
-  resources :carts
-  resources :products
-  get '/pagamento' => 'orders#pagamento'
+  devise_for :users, controllers: { registrations: 'registrations' }
+  get 'notification/create'
   post '/notification' => 'notification#create'
+  resources :tests
+  resources :products
+  resources :line_items
+  get '/carrinho/:id' => 'carts#show', as: 'cart'
+  get '/finalizar_pedido' => 'orders#new', as: 'new_order'
+  get '/pedidos' => 'orders#index', as: 'orders'
+  post '/orders' => 'orders#create'
+  get '/pedido/:id' => 'orders#show', as: 'order'
+  get 'pedido/:id/boleto' => 'orders#boleto', as: 'boleto'
   
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

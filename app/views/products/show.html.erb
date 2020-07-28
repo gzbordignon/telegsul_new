@@ -1,19 +1,47 @@
-<p id="notice"><%= notice %></p>
+<%= link_to 'Voltar', root_path %>
 
 <p>
-  <strong>Title:</strong>
+  <strong>Nome:</strong>
   <%= @product.title %>
 </p>
 
 <p>
-  <strong>Description:</strong>
+  <strong>Descrição:</strong>
   <%= @product.description %>
 </p>
 
 <p>
-  <strong>Price:</strong>
-  <%= @product.price %>
+  <strong>Preço:</strong>
+  <%= number_to_currency(@product.price, unit: 'R$ ', separator: ',', delimiter: '.') %>
 </p>
 
-<%= link_to 'Edit', edit_product_path(@product) %> |
-<%= link_to 'Back', products_path %>
+<%= form_with(url: line_items_path, local: true, id: 'product-form') do |f| %>
+  <%= hidden_field_tag :product_id, @product.id %>
+  <div>
+    <%= f.label :quantity, 'Quantidade' %>
+    <%= number_field_tag :quantity, 1 %>
+  </div>
+  <br>
+  <div>
+    <label for="art">Já tem arte?</label>
+    <select name="art" id="">
+      <option>Escolha uma opção</option>
+      <option value="true">Crie pra mim( + R$5,00)</option>
+      <option value="false">Já tenho</option>
+    </select>    
+  </div>
+  <br>
+  <div id="img-upload">
+    <%= f.label :images do %>
+      Enviar arquivos
+      <span style="display: none">
+        <%= f.file_field :images %>
+      </span>
+    <% end %>
+  </div>
+  <br>
+
+  <%= submit_tag 'Adicionar ao carrinho' %>
+<% end %>
+
+

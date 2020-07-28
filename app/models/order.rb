@@ -1,16 +1,16 @@
 class Order < ApplicationRecord
   enum pay_type: {
-    "boleto"          => 0, 
-    "credit_card"    => 1, 
-    "transfer" => 2
+    "Boleto"          => 0, 
+    "Cartão de crédito"    => 1, 
+    "Transferência bancária" => 2
   }
   
   
   has_many :line_items, dependent: :destroy
   has_many :payments
   belongs_to :user
-  has_one :shipping
-  accepts_nested_attributes_for :shipping
+  has_one :shipping_address
+  accepts_nested_attributes_for :shipping_address
   
   # validates :name, :address, :email, presence: true
   # validates :pay_type, inclusion: pay_types.keys
@@ -25,6 +25,8 @@ class Order < ApplicationRecord
   def total_price
     line_items.to_a.sum { |item| item.total_price }
   end
+
+
 
   
 

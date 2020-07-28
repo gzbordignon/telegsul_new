@@ -24,6 +24,7 @@ gem 'jbuilder', '~> 2.7'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
+# gem "pagseguro-oficial", git: 'https://github.com/jpaulomotta/ruby', branch: 'sandbox-find-by-notification-code' 
 gem "pagseguro-oficial", "~> 2.5.0"
 gem "devise"
 

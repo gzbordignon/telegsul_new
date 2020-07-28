@@ -1,0 +1,38 @@
+
+
+#frete-form {
+	display: flex;
+	justify-content: space-between;
+	div {
+		text-align: center;
+	}
+}
+
+#payment-methods {
+	display: flex;
+	justify-content: space-between;
+	div {
+		text-align: center;
+	}
+}
+
+#product-form {
+	width: 150px;
+
+	#img-upload {
+		border: 1px solid black;
+		cursor: pointer;
+			padding: 5px;
+			label {
+				cursor: pointer;
+			}
+	}
+}
+
+
+#sign-forms {
+	width: 720px;
+	margin: 0 auto;
+	display: flex;
+	justify-content: space-between;
+}

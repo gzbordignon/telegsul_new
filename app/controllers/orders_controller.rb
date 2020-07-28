@@ -3,19 +3,23 @@ class OrdersController < ApplicationController
   include Payment
   before_action :set_cart, only: [:new, :create]
   before_action :ensure_cart_isnt_empty, only: :new
-  before_action :set_order, only: [:show, :edit, :update, :destroy]
+  before_action :set_order, only: [:show, :boleto, :edit, :update, :destroy]
   before_action :authenticate_user!
   # skip_before_action :verify_authenticity_token
 
   # GET /orders
   # GET /orders.json
   def index
-    @orders = Order.all
+    @orders = current_user.orders
   end
 
   # GET /orders/1
   # GET /orders/1.json
   def show
+  end
+
+  def boleto
+    @order = Order.find(params[:id])
   end
 
   # GET /orders/new
@@ -31,22 +35,35 @@ class OrdersController < ApplicationController
   # POST /orders
   # POST /orders.json
   def create
-    # if params[:pay_type] == 'boleto'
-      # payment = PagSeguro::BoletoTransactionRequest.new
-      # boleto(payment, @cart, params[:sender_hash])
-    # elsif params[:pay_type] == 'credit_card'
-      # payment = PagSeguro::CreditCardTransactionRequest.new
-      # credit_card(payment, @cart, params[:sender_hash], params[:card_token], params[:price], params[:card_options])
-    # end
 
-    if params[:pay_type] == 'boleto'
+    # 4111111111111111
+
+    if params[:pay_type] == 'Boleto'
       payment = PagSeguro::BoletoTransactionRequest.new
-      gerar_boleto(payment, @cart, params[:sender_hash]) #retorna payment
+      gerar_boleto(payment, @cart, params[:sender_hash_boleto], params[:order][:shipping], params[:order][:shipping_address_attributes], Order, current_user) #retorna payment
+      @order = current_user.orders.new(
+      order_params.
+        merge(
+          link: payment.payment_link,
+          status: get_status((payment.status).to_i), 
+          reference: "REF-boleto-#{Order.all.last.id + 1}", 
+          pay_type: params[:pay_type]
+        )
+      )
+    elsif params[:pay_type] == 'Cartão de crédito'
+      payment = PagSeguro::CreditCardTransactionRequest.new
+      credit_card_payment(payment, @cart, params[:sender_hash_card], params[:card_token], params[:card][:card_options], params[:order][:shipping], Order, current_user, params[:order][:shipping_address_attributes], params[:card])
+      @order = current_user.orders.new(
+      order_params.
+        merge(
+          link: '.', 
+          status: get_status((payment.status).to_i), 
+          reference: "REF-creditcard-#{Order.all.last.id + 1}", 
+          pay_type: params[:pay_type]
+        )
+      )
     end
 
-    @order = current_user.orders.new(
-      order_params.merge(link: payment.payment_link, status: 'pending', reference: payment.reference)
-      )
     @order.add_line_items_from_cart(@cart)
 
     response = { order: @order, payment: payment }
@@ -56,7 +73,6 @@ class OrdersController < ApplicationController
         Cart.destroy(session[:cart_id])
         session[:cart_id] = nil
         format.html { redirect_to order_boleto_path(@order) }
-        # format.json { render json: payment }
         format.json { render json: response}
       else
         format.html { render :new }
@@ -66,8 +82,7 @@ class OrdersController < ApplicationController
     end
   end
 
-  def boleto
-  end
+
 
   # PATCH/PUT /orders/1
   # PATCH/PUT /orders/1.json
@@ -101,7 +116,7 @@ class OrdersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def order_params
-      params.require(:order).permit(:pay_type, :status, :reference, :shipping, :shipping_id, :user_id, :link, shipping_attributes: [:city])
+      params.require(:order).permit(:pay_type, :status, :reference, :shipping, :user_id, :link, shipping_address_attributes: [:street, :number, :complement, :district, :postal_code, :city, :state])
     end
 
     def ensure_cart_isnt_empty

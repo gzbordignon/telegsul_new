@@ -1,6 +1,18 @@
-<p id="notice"><%= notice %></p>
+<%= link_to 'Voltar à loja', root_path %>
 
-<%= link_to 'Imprimir Boleto', @order.link, target: '_blank' %>
+<h2>Pedido #<%= @order.id %></h2>
 
-<%= link_to 'Edit', edit_order_path(@order) %> |
-<%= link_to 'Back', orders_path %>
+<p>
+	<strong>Status:</strong>
+	<%= @order.status %>
+</p>
+
+<p>
+	<strong>Método de pagamento:</strong>
+	<%= @order.pay_type %>
+</p>
+
+<strong>
+	<%= link_to 'Imprimir Boleto', @order.link, target: '_blank' %>
+</strong>
+

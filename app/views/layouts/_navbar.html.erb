@@ -1,0 +1,11 @@
+<%= link_to 'Início', root_path %>
+<% if @cart %>
+	<%= link_to 'Seu carrinho', cart_path(@cart) %>
+	<%= link_to 'Finalizar pedido', new_order_path %>
+<% end %>
+
+<% if user_signed_in? %>
+	<%= link_to 'Logout', destroy_user_session_path, method: :delete %>
+<% else %>
+	<%= link_to 'Fazer login / Cadastrar-se', new_user_session_path %>
+<% end %>
