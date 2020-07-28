@@ -12,7 +12,9 @@
 	<%= @order.pay_type %>
 </p>
 
+<% if @order.pay_type == 'Boleto' %>
 <strong>
 	<%= link_to 'Imprimir Boleto', @order.link, target: '_blank' %>
 </strong>
+<% end %>
 

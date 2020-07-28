@@ -83,7 +83,7 @@ module Payment
         },
         phone: {
           area_code: '51',
-          number: '995823059'
+          number: '34424323'
         }
       }
     end
@@ -125,13 +125,13 @@ module Payment
 
     def billing_address(payment, user)
       payment.billing_address = {
-        street: user.billing_address.street,
-        number: user.billing_address.number,
-        complement: user.billing_address.complement,
+        street: 'Av. Getúlio Vargas',
+        number: '2888',
+        complement: 'Sala 2',
         district: user.billing_address.district,
-        postal_code: user.billing_address.postal_code,
-        city: user.billing_address.city,
-        state: user.billing_address.state
+        postal_code: '94810002',
+        city: 'Alvorada',
+        state: 'RS'
       }
     end
 

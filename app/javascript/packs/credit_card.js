@@ -30,9 +30,9 @@ $(document).ready(function() {
 					console.log(JSON.stringify(response))
 					// console.log(JSON.stringify(response.order.id));
 					// console.log(JSON.stringify(response));
-					// setTimeout(function() {
-					// 	window.location.href = `/orders/${response.order.id}`;
-					// }, 5000);
+					setTimeout(function() {
+						window.location.href = `/pedido/${response.order.id}`;
+					}, 5000);
 				},
 				error: function(response) {
 					console.log('wtf' + JSON.stringify(response));

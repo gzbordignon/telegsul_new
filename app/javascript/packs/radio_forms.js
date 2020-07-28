@@ -19,11 +19,11 @@ $(document).ready(function() {
 
 	// payment radio buttons
 	$('#payment-methods').find('input').change(function() {
-		if ($(this).is(':checked') && $(this).val() === 'boleto') {
+		if ($(this).is(':checked') && $(this).val() === 'Boleto') {
 			$('#credit-card-form-container').hide();
 			$('#boleto-form-container').show();
 		}
-		else if ($(this).is(':checked') && $(this).val() === 'credit_card') {
+		else if ($(this).is(':checked') && $(this).val() === 'Cartão de crédito') {
 			$('#boleto-form-container').hide();
 			$('#credit-card-form-container').show();
 		}

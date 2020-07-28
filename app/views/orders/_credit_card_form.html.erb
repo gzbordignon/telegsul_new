@@ -5,7 +5,7 @@
     <%= hidden_field_tag :sender_hash_card, nil, id: 'sender-hash-credit-card' %>
     <%= hidden_field_tag :session_id, @session_id, id: 'session-id' %>    
     <%= hidden_field_tag :card_token, nil, id: 'card-token' %>
-    <%= hidden_field_tag :pay_type, 'credit_card' %>
+    <%= hidden_field_tag :pay_type, 'Cartão de crédito' %>
 
     <!-- Error message -->
      <% if order.errors.any? %>
@@ -22,28 +22,28 @@
     <!-- Dados de pagamento -->
     <legend>Dados do Cartão</legend>
     <div>
-      <%= label_tag :card_name, 'Nome do Titular' %>
+      <%= label_tag :card_name, 'Nome do Titular' %> <br>
       <%= text_field_tag('card[card_name]', nil,  id: 'card-name') %>
     </div>
     <div>
-      <%= label_tag :card_document, 'CPF/CNPJ do Titular' %>
+      <%= label_tag :card_document, 'CPF/CNPJ do Titular' %> <br>
       <%= text_field_tag('card[card_document]', nil, id: 'card-document') %>
     </div>
     <div>
-      <%= label_tag :card_number, 'Número do Cartão' %>
+      <%= label_tag :card_number, 'Número do Cartão' %> <br>
       <%= text_field_tag('card[card_number]', nil, id: 'card-number') %>
     </div>
     <div>
-      <%= label_tag :expiration_date, 'Data de Validade' %>
+      <%= label_tag :expiration_date, 'Data de Validade' %> <br>
       <%= select_month(Date.today, {use_month_names: %w(Janeiro Fevereiro Março Abril Maio Junho Julho Agosto Setembro Outubro Novembro Dezembro)}, id: 'expiration-month', name: 'card[expiration_month]') %>
       <%= select_year(Date.today, {start_year: Date.current.year - 10, end_year: Date.current.year + 10}, id: 'expiration-year', name: 'card[expiration_year]') %>
     </div>
     <div id="card-cvv-box" style="display: none">
-      <%= label_tag :card_cvv, 'Código de Segurança' %>
+      <%= label_tag :card_cvv, 'Código de Segurança' %> <br>
       <%= text_field_tag 'card[card_cvv]', nil, id: 'card-cvv' %>
     </div>
     <div id="card-options-box" style="display: none">
-      <%= label_tag :card_options, 'Opções de Parcelamentos' %>
+      <%= label_tag :card_options, 'Opções de Parcelamentos' %> <br>
       <%= select_tag 'card[card_options]', nil, id: 'card-options'  %> 
     </div> 
     <div>

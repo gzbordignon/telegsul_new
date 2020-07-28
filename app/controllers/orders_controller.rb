@@ -42,14 +42,14 @@ class OrdersController < ApplicationController
       payment = PagSeguro::BoletoTransactionRequest.new
       gerar_boleto(payment, @cart, params[:sender_hash_boleto], params[:order][:shipping], params[:order][:shipping_address_attributes], Order, current_user) #retorna payment
       @order = current_user.orders.new(
-      order_params.
-        merge(
-          link: payment.payment_link,
-          status: get_status((payment.status).to_i), 
-          reference: "REF-boleto-#{Order.all.last.id + 1}", 
-          pay_type: params[:pay_type]
+        order_params.
+          merge(
+            link: payment.payment_link,
+            status: get_status((payment.status).to_i), 
+            reference: "REF-boleto-#{Order.all.last.id + 1}", 
+            pay_type: params[:pay_type]
+          )
         )
-      )
     elsif params[:pay_type] == 'Cartão de crédito'
       payment = PagSeguro::CreditCardTransactionRequest.new
       credit_card_payment(payment, @cart, params[:sender_hash_card], params[:card_token], params[:card][:card_options], params[:order][:shipping], Order, current_user, params[:order][:shipping_address_attributes], params[:card])
