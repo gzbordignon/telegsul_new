@@ -2,7 +2,7 @@ class LineItem < ApplicationRecord
   belongs_to :order, optional: true
   belongs_to :product, optional: true
   belongs_to :cart
-  # has_many_attached :images
+  has_many_attached :images
 
   def total_price
   	if art == 0

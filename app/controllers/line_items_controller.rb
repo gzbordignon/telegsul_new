@@ -28,17 +28,11 @@ class LineItemsController < ApplicationController
   def create
     puts params[:art].to_i
 
-    # @line_item = @cart.add_product(
-    #   product_id: params[:product_id],
-    #   quantity: params[:quantity],
-    #   art: params[:art],
-    #   images: params[:images]
-    # )
-
     @line_item = @cart.add_product(
       product_id: params[:product_id],
       quantity: params[:quantity],
-      art: params[:art]
+      art: params[:art],
+      images: params[:images]
     )
 
     redirect_to cart_path(@cart)
@@ -98,7 +92,7 @@ class LineItemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def line_item_params
-      # params.require(:line_item).permit(:quantity, :product_id, images: [])
-      params.require(:line_item).permit(:quantity, :product_id)
+      params.require(:line_item).permit(:quantity, :product_id, images: [])
+      # params.require(:line_item).permit(:quantity, :product_id)
     end
 end
