@@ -17,14 +17,19 @@
 }
 
 #product-form {
-	width: 150px;
-
 	#img-upload {
-		border: 1px solid black;
-		cursor: pointer;
-			padding: 5px;
 			label {
+				display: block;
+				border: 1px solid black;
 				cursor: pointer;
+				padding: 5px;
+				cursor: pointer;
+				width: 200px;
+			}
+			.preview {
+				width: 300px;
+				img {
+				}
 			}
 	}
 }
@@ -35,4 +40,8 @@
 	margin: 0 auto;
 	display: flex;
 	justify-content: space-between;
+}
+
+img {
+	width: 100%;
 }

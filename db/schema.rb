@@ -33,6 +33,20 @@ ActiveRecord::Schema.define(version: 2020_07_28_172814) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
+  create_table "addresses", force: :cascade do |t|
+    t.string "street"
+    t.string "number"
+    t.string "complement"
+    t.string "postal_code"
+    t.string "district"
+    t.string "city"
+    t.string "state"
+    t.integer "order_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["order_id"], name: "index_addresses_on_order_id"
+  end
+
   create_table "billing_addresses", force: :cascade do |t|
     t.string "street"
     t.string "number"
@@ -133,6 +147,7 @@ ActiveRecord::Schema.define(version: 2020_07_28_172814) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "addresses", "orders"
   add_foreign_key "billing_addresses", "users"
   add_foreign_key "line_items", "carts"
   add_foreign_key "line_items", "orders"

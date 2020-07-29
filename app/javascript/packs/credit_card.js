@@ -21,8 +21,8 @@ $(document).ready(function() {
 		setTimeout(function() {
 			$.ajax({
 				method: 'POST',
-				// url: '/orders.json', // isso tá mandando pro format.json
-				url: 'https://telegsul.herokuapp.com/orders.json', // isso tá mandando pro format.json
+				url: '/orders.json', // isso tá mandando pro format.json
+				// url: 'https://telegsul.herokuapp.com/orders.json', // isso tá mandando pro format.json
 				data: data,
 				dataType: 'json',
 				success: function(response) {

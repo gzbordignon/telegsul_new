@@ -27,6 +27,7 @@ gem 'jbuilder', '~> 2.7'
 # gem "pagseguro-oficial", git: 'https://github.com/jpaulomotta/ruby', branch: 'sandbox-find-by-notification-code' 
 gem "pagseguro-oficial", "~> 2.5.0"
 gem "devise"
+gem "figaro"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
