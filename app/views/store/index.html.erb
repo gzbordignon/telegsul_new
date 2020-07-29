@@ -5,10 +5,11 @@
     <% @products.each do |product| %>
       <% cache product do %>
         <li>
-          <div style="width: 100px">
-            <%= image_tag(product.image) %>
-          </div>
-          
+          <% if product.image %>
+            <div style="width: 100px">
+              <%= image_tag(product.image) %>
+            </div>
+          <% end %>
           <h2><%= product.title %></h2>
           <p>
             <%= sanitize(product.description) %>
