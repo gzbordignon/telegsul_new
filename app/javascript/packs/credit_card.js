@@ -16,24 +16,22 @@ $(document).ready(function() {
 		const shippingForm = $('#shipping-form');
 		const creditCardForm = $('#credit-card-form');
 
-		// setTimeout(function() {
-			// console.log(shippingForm.serialize())
-		// }, 3000)
+		const data = shippingForm.serialize() + "&&" + creditCardForm.serialize()
 
 		setTimeout(function() {
 			$.ajax({
 				method: 'POST',
 				// url: '/orders.json', // isso tá mandando pro format.json
-				url: 'http://telegsul.herokuapp.com/orders.json', // isso tá mandando pro format.json
-				data: shippingForm.serialize() + "&&" + creditCardForm.serialize(),
+				url: 'https://telegsul.herokuapp.com/orders.json', // isso tá mandando pro format.json
+				data: data,
 				dataType: 'json',
 				success: function(response) {
 					console.log(JSON.stringify(response))
 					// console.log(JSON.stringify(response.order.id));
 					// console.log(JSON.stringify(response));
-					setTimeout(function() {
-						window.location.href = `/pedido/${response.order.id}`;
-					}, 5000);
+					// setTimeout(function() {
+					// 	window.location.href = `/pedido/${response.order.id}`;
+					// }, 5000);
 				},
 				error: function(response) {
 					console.log('wtf' + JSON.stringify(response));

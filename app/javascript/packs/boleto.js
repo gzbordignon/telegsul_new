@@ -19,11 +19,11 @@ $(document).ready(function() {
 			dataType: 'json',
 			// contentType: 'application/json',
 			success: function(response) {
-				console.log(JSON.stringify(response.order.id));
+				// console.log(JSON.stringify(response.order.id));
 				console.log(JSON.stringify(response));
-				setTimeout(function() {
-					window.location.href = `/pedido/${response.order.id}/boleto`;
-				}, 3000);
+				// setTimeout(function() {
+				// 	window.location.href = `/pedido/${response.order.id}/boleto`;
+				// }, 3000);
 			},
 			error: function(response) {
 				console.log('wtf' + JSON.stringify(response));
