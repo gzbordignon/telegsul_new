@@ -3,6 +3,9 @@ $(document).ready(function() {
 	input.style.opacity = 0;
 	const preview = document.querySelector('.preview')
 
+	console.log(input)
+	console.log(preview)
+
 	const fileTypes = [
 	  "image/apng",
 	  "image/bmp",
