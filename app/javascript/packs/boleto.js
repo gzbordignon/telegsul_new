@@ -12,7 +12,8 @@ $(document).ready(function() {
 
 		$.ajax({
 			method: 'POST',
-			url: '/orders.json', // isso tá mandando pro format.json
+			// url: '/orders.json', // isso tá mandando pro format.json
+			url: 'https://telegsul.herokuapp.com/orders.json', // isso tá mandando pro format.json
 			data: shippingForm + "&&" + boletoForm,
 			dataType: 'json',
 			success: function(response) {
