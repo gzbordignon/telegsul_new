@@ -1,5 +1,6 @@
 $(document).ready(function() {
 
+	setTimeout(function() {
 	const input = document.querySelector('.img-input')
 	input.style.opacity = 0;
 	const preview = document.querySelector('.preview')
@@ -60,6 +61,7 @@ $(document).ready(function() {
 
 
 
+	}, 3000);
 
 	
 function validFileType(fileTypes, file) {
