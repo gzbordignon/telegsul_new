@@ -46,7 +46,8 @@ class OrdersController < ApplicationController
           merge(
             link: payment.payment_link,
             status: get_status((payment.status).to_i), 
-            reference: "REF-boleto-#{Order.all.last.id + 1}", 
+            # reference: "REF-boleto-#{Order.all.last.id + 1}", 
+            reference: "REF-boleto-123", 
             pay_type: params[:pay_type]
           )
         )
@@ -58,7 +59,8 @@ class OrdersController < ApplicationController
         merge(
           link: '.', 
           status: get_status((payment.status).to_i), 
-          reference: "REF-creditcard-#{Order.all.last.id + 1}", 
+          # reference: "REF-creditcard-#{Order.all.last.id + 1}", 
+          reference: "REF-creditcard-123", 
           pay_type: params[:pay_type]
         )
       )

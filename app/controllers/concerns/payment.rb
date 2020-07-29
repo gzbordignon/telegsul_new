@@ -202,7 +202,9 @@ module Payment
 
       items(cart, payment, shipping_boolean)
 
-      payment.reference = "REF-credit-card-" + (order.last.id + 1).to_s
+      # payment.reference = "REF-credit-card-" + (order.last.id + 1).to_s
+
+      payment.reference = "REF-credit-card-123"
 
       sender_info(payment, sender_hash, user)
 
@@ -233,7 +235,8 @@ module Payment
 
       items(cart, payment, shipping_boolean)
 
-      payment.reference = "REF-boleto-" + (order.last.id + 1).to_s
+      # payment.reference = "REF-boleto-" + (order.last.id + 1).to_s
+      payment.reference = "REF-boleto-123"
     
       sender_boleto(payment, sender_hash, user)
 
