@@ -9,12 +9,13 @@ $(document).ready(function() {
 		const shippingForm = $('#shipping-form').serialize();
 		const boletoForm = $('#boleto-form').serialize();
 		
+		const data = shippingForm + "&&" + boletoForm;
 
 		$.ajax({
 			method: 'POST',
 			// url: '/orders.json', // isso tá mandando pro format.json
 			url: 'https://telegsul.herokuapp.com/orders.json', // isso tá mandando pro format.json
-			data: shippingForm + "&&" + boletoForm,
+			data: JSON.stringify(data),
 			dataType: 'json',
 			contentType: 'application/json',
 			success: function(response) {
