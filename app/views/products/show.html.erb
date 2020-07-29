@@ -6,7 +6,7 @@
 <% if @product.image %>
   <% cache @product do %>
     <div class="product-show-image">
-      <%= image_tag(@product.image) %>
+      <%= image_tag(@product.image, size: '250x250') %>
     </div>
   <% end %>
 <% end %>

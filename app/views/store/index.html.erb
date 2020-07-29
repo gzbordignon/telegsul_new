@@ -5,7 +5,7 @@
         <li>
           <% if product.image %>
             <div class="catalog-img">
-              <%= image_tag(product.image) %>
+              <%= image_tag(product.image, size: '120x120')  %>
             </div>
           <% end %>
           <h2><%= product.title %></h2>
