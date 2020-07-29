@@ -15,9 +15,9 @@ $(document).ready(function() {
 			method: 'POST',
 			// url: '/orders.json', // isso tá mandando pro format.json
 			url: 'https://telegsul.herokuapp.com/orders.json', // isso tá mandando pro format.json
-			data: JSON.stringify(data),
+			data: data,
 			dataType: 'json',
-			contentType: 'application/json',
+			// contentType: 'application/json',
 			success: function(response) {
 				console.log(JSON.stringify(response.order.id));
 				console.log(JSON.stringify(response));
