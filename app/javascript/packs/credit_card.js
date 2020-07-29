@@ -24,7 +24,7 @@ $(document).ready(function() {
 			$.ajax({
 				method: 'POST',
 				// url: '/orders.json', // isso tá mandando pro format.json
-				url: 'https://telegsul.herokuapp.com/orders.json', // isso tá mandando pro format.json
+				url: 'http://telegsul.herokuapp.com/orders.json', // isso tá mandando pro format.json
 				data: shippingForm.serialize() + "&&" + creditCardForm.serialize(),
 				dataType: 'json',
 				success: function(response) {
