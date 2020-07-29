@@ -2,10 +2,13 @@
   <%= link_to 'Voltar', root_path %>
 </div>
 
+
 <% if @product.image %>
-  <div class="product-show-image">
-    <%= image_tag(@product.image) %>
-  </div>
+  <% cache @product do %>
+    <div class="product-show-image">
+      <%= image_tag(@product.image) %>
+    </div>
+  <% end %>
 <% end %>
 
 <p>
