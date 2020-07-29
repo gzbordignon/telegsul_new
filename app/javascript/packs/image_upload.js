@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	const input = document.querySelector('.img-input')
+	input.style.opacity = 0;
 	const preview = document.querySelector('.preview')
 
 	const fileTypes = [
@@ -15,7 +16,7 @@ $(document).ready(function() {
 	  "image/x-icon"
 	];
 	
-	input.style.opacity = 0;
+	
 	input.addEventListener('change', function() {
 
 	  while(preview.firstChild) {
