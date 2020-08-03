@@ -2,7 +2,7 @@ class Order < ApplicationRecord
   enum pay_type: {
     "Boleto"          => 0, 
     "Cartão de crédito"    => 1, 
-    "Transferência bancária" => 2
+    "Depósito" => 2
   }
   
   
@@ -25,6 +25,9 @@ class Order < ApplicationRecord
   def total_price
     line_items.to_a.sum { |item| item.total_price }
   end
+
+
+
 
 
 

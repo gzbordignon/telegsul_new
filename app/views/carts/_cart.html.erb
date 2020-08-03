@@ -1,5 +1,5 @@
 <h2>Seu carrinho</h2>
-  <table>
+  <table id="cart-table">
     <% @cart.line_items.each do |line_item| %>
       <tr id="line-item-<%= line_item.id %>">
         <%= hidden_field_tag :id, line_item.id %>
@@ -21,7 +21,7 @@
           <%= line_item.product.title %>
         </td>
         <td id="line-item-total-price-<%= (line_item.id).to_s %>" value="lol">
-          <%= number_to_currency(line_item.total_price, unit: 'R$ ', separator: ',', delimiter: '.') %>
+          <%= number_to_currency_brl(line_item.total_price) %>
         </td>
         <%= form_with(url: line_item_path(line_item), method: :delete, local: true) do |f| %>
           <td><%= f.submit 'x', class: 'delete' %></td>
@@ -31,7 +31,7 @@
     <tfoot>
       <tr>
         <th colspan="2">Total:</th>
-        <td id="all-line-items-price"><%= number_to_currency(@cart.all_line_items_total_price, unit: 'R$ ', separator: ',', delimiter: '.') %></td>
+        <td id="all-line-items-price"><%= number_to_currency_brl(@cart.all_line_items_total_price) %></td>
       </tr>
     </tfoot>
   </table>

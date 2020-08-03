@@ -9,6 +9,8 @@ class NotificationController < ApplicationController
     transaction = PagSeguro::Transaction.find_by_notification_code(params[:notificationCode])
 
     status = ['Aguardando Pagamento', 'Em análise', 'Paga', 'Disponível', 'Em disputa', 'Devolvida', 'Cancelada']
+
+    puts Order.last
  
     if transaction.errors.empty?
       order = Order.where(reference: transaction.reference).last

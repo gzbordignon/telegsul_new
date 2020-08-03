@@ -5,7 +5,6 @@ class OrdersController < ApplicationController
   before_action :ensure_cart_isnt_empty, only: :new
   before_action :set_order, only: [:show, :boleto, :edit, :update, :destroy]
   before_action :authenticate_user!
-  # skip_before_action :verify_authenticity_token
 
   # GET /orders
   # GET /orders.json
@@ -38,43 +37,38 @@ class OrdersController < ApplicationController
 
     # 4111111111111111
 
+
+
     if params[:pay_type] == 'Boleto'
+      reference = "REF-BOLETO-#{@cart.id}"
       payment = PagSeguro::BoletoTransactionRequest.new
-      gerar_boleto(payment, @cart, params[:sender_hash_boleto], params[:order][:shipping], params[:order][:shipping_address_attributes], Order, current_user) #retorna payment
-      @order = current_user.orders.new(
-        order_params.
-          merge(
-            link: payment.payment_link,
-            status: get_status((payment.status).to_i), 
-            # reference: "REF-boleto-#{Order.all.last.id + 1}", 
-            reference: "REF-boleto-123", 
-            pay_type: params[:pay_type]
-          )
-        )
+      gerar_boleto(payment, @cart, params[:sender_hash_boleto], params[:order][:shipping], params[:order][:shipping_address_attributes], current_user, reference) #retorna payment
+      @order = current_user.buildOrder(order_params, payment.payment_link, get_status((payment.status).to_i), reference, params[:pay_type])
+      @order.add_line_items_from_cart(@cart)
+      response = { order: @order, payment: payment }
+      if payment.errors.empty?
+        @order.save
+      end
     elsif params[:pay_type] == 'Cartão de crédito'
       payment = PagSeguro::CreditCardTransactionRequest.new
       credit_card_payment(payment, @cart, params[:sender_hash_card], params[:card_token], params[:card][:card_options], params[:order][:shipping], Order, current_user, params[:order][:shipping_address_attributes], params[:card])
-      @order = current_user.orders.new(
-      order_params.
-        merge(
-          link: '.', 
-          status: get_status((payment.status).to_i), 
-          # reference: "REF-creditcard-#{Order.all.last.id + 1}", 
-          reference: "REF-creditcard-123", 
-          pay_type: params[:pay_type]
-        )
-      )
+      @order = current_user.buildOrder(order_params, '', get_status((payment.status).to_i), 'REF-123', params[:pay_type])
+      @order.add_line_items_from_cart(@cart)
+      response = { order: @order, payment: payment }
+      if payment.errors.empty?
+        @order.save
+      end
+    else
+      @order = current_user.buildOrder(order_params, '', 'Aguardando pagamento', 'REF-123', params[:pay_type])
+      @order.add_line_items_from_cart(@cart)
+      response = { order: @order, payment: payment }
     end
-
-    @order.add_line_items_from_cart(@cart)
-
-    response = { order: @order, payment: payment }
 
     respond_to do |format|
       if @order.save
         Cart.destroy(session[:cart_id])
         session[:cart_id] = nil
-        format.html { redirect_to order_boleto_path(@order) }
+        format.html {}
         format.json { render json: response}
       else
         format.html { render :new }

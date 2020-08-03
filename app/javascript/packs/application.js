@@ -8,12 +8,17 @@ require("turbolinks").start()
 require("@rails/activestorage").start()
 require("channels")
 require("jquery")
-require("packs/image_upload")
-require("packs/pagseguro")
-require("packs/boleto")
-require("packs/credit_card")
-require("packs/radio_forms")
+// require("packs/image_upload")
+// require("packs/get_payment_methods")
+// require("packs/boleto")
+// require("packs/credit_card")
+// require("packs/deposito")
+// require("packs/payment_methods_form")
+// require("packs/frete_form")
+// require("packs/signup_forms")
+// require("packs/cnpj_form")
 require("packs/cart")
+
 
 
 // Uncomment to copy all static images under ../images to the output folder and reference

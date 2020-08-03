@@ -48,25 +48,12 @@ module Payment
       end
     end
 
-    def sender_info(payment, sender_hash, user)
+    def sender(payment, sender_hash, user)
       payment.sender = {
         hash: sender_hash,
         name: user.name,
         email: user.email,
-        document: { type: 'CPF', value: '03310782018'}, # gem do fork é assim, na oficial é só cpf: '03310782018'
-        phone: {
-          area_code: user.area_code,
-          number: user.phone_number
-        }
-      }
-    end
-
-    def sender_boleto(payment, sender_hash, user)
-      payment.sender = {
-        hash: sender_hash,
-        name: user.name,
-        email: user.email,
-        cpf: '03310782018',
+        document: { type: user.document_type, value: user.document_number}, # gem do fork é assim, na oficial é só cpf: '03310782018'
         phone: {
           area_code: user.area_code,
           number: user.phone_number
@@ -190,9 +177,6 @@ module Payment
         puts "      country: #{payment.shipping.address.country}"
         puts "      type: #{payment.shipping.type_name}"
         puts "      cost: #{payment.shipping.cost}"
-        items_array = []
-        payment.items.each { |item| items_array << item.amount.to_f }
-        puts items_array.inject(:+)
       end
     end
 
@@ -206,7 +190,7 @@ module Payment
 
       payment.reference = "REF-credit-card-123"
 
-      sender_info(payment, sender_hash, user)
+      sender(payment, sender_hash, user)
 
       holder_info(payment, card_info)
 
@@ -226,7 +210,7 @@ module Payment
 
     end
 
-    def gerar_boleto(payment, cart, sender_hash, shipping_boolean, shipping_address_attributes, order, user)
+    def gerar_boleto(payment, cart, sender_hash, shipping_boolean, shipping_address_attributes, user, reference)
 
       # payment.notification_url = "https://telegsul.herokuapp.com/notification"
       payment.notification_url = "http://localhost:3000/notification"
@@ -236,9 +220,9 @@ module Payment
       items(cart, payment, shipping_boolean)
 
       # payment.reference = "REF-boleto-" + (order.last.id + 1).to_s
-      payment.reference = "REF-boleto-123"
+      payment.reference = reference
     
-      sender_boleto(payment, sender_hash, user)
+      sender(payment, sender_hash, user)
 
       shipping_address(payment, shipping_address_attributes, shipping_boolean)
 
@@ -249,6 +233,31 @@ module Payment
       errors(payment)
 
       payment
+
+    end
+
+    def deposito(payment, cart, sender_hash, shipping_boolean, shipping_address_attributes, order, user)
+      payment.notification_url = "http://localhost:3000/notification"
+      payment.payment_mode = "gateway"
+
+      items(cart, payment, shipping_boolean)
+
+      payment.reference = "REF-deposito-123"
+
+      sender(payment, sender_hash, user)
+
+      shipping_address(payment, shipping_address_attributes, shipping_boolean)
+
+      payment.bank = {name: "itau"}
+
+      serializer(payment)
+
+      payment.create
+
+      errors(payment)
+
+      payment
+
 
     end
 

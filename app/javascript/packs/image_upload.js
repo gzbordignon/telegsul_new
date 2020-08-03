@@ -1,12 +1,8 @@
-$(document).ready(function() {
+document.addEventListener('turbolinks:load', function() {
 
 	setTimeout(function() {
 	const input = document.querySelector('.img-input')
-	input.style.opacity = 0;
 	const preview = document.querySelector('.preview')
-
-	console.log(input)
-	console.log(preview)
 
 	const fileTypes = [
 	  "image/apng",

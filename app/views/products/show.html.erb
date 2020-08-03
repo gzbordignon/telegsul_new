@@ -23,7 +23,7 @@
 
 <p>
   <strong>Preço:</strong>
-  <%= number_to_currency(@product.price, unit: 'R$ ', separator: ',', delimiter: '.') %>
+  <%= number_to_currency_brl(@product.price) %>
 </p>
 
 <%= form_with(url: line_items_path, local: true, id: 'product-form') do |f| %>
@@ -54,3 +54,4 @@
 <% end %>
 
 
+<%= javascript_pack_tag 'image_upload.js' %>

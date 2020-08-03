@@ -1,103 +1,16 @@
+<%= render 'document_type_form' %>
+
 <div id="sign-forms">
   
+  <%= render 'cpf_form' %>
+  
+  <%= render 'cnpj_form' %>
 
+  <%= render 'login_form' %>
 
-
-<div id="registration-form-container">
-  <h2>Cadastrar</h2>
-
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-    <%= render "devise/shared/error_messages", resource: resource %>
-
-    <div class="field">
-      <%= f.label :name, 'Nome' %> <br>
-      <%= f.text_field :name, autofocus: true, autocomplete: "name" %>
-    </div>
-
-    <div class="field">
-      <%= f.label :document, 'CPF' %> <br>
-      <%= f.text_field :document, autocomplete: "document" %>
-    </div>
-
-    <div class="field">
-      <%= f.label :email, 'E-mail' %> <br>
-      <%= f.email_field :email, autocomplete: "email" %>
-    </div>
-
-    <div class="field">
-      <%= f.label :area_code, 'DDD' %> <br>
-      <%= f.text_field :area_code, autocomplete: "area_code" %>
-    </div>
-    <div>
-      <%= f.label :phone_number, 'Número do telefone' %> <br>
-      <%= f.text_field :phone_number, autocomplete: "phone_number" %>
-    </div>
-
-    <div class="field">
-      <%= f.label :password, 'Senha' %>
-      <% if @minimum_password_length %>
-      <em>(Mínimo <%= @minimum_password_length %> caracteres)</em>
-      <% end %><br />
-      <%= f.password_field :password, autocomplete: "new-password" %>
-    </div>
-
-    <div class="field">
-      <%= f.label :password_confirmation, 'Confirmação de senha' %> <br>
-      <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-    </div> 
-    <div class="actions">
-      <%= f.submit "Cadastrar" %>
-    </div>
-  <% end %> 
-</div>
-
-
-
-<!--  
-  <#%= f.fields_for :billing_address, BillingAddress.new do |ff| %>
-    <#%= ff.label :street, 'Rua' %>
-    <#%= ff.text_field :street %>
-    <#%= ff.label :number, 'Número' %>
-    <#%= ff.text_field :number %>
-    <#%= ff.label :district, 'Bairro' %>
-    <#%= ff.text_field :district %>
-    <#%= ff.label :postal_code, 'CEP' %>
-    <#%= ff.text_field :postal_code %>
-    <#%= ff.label :city, 'Cidade' %>
-    <#%= ff.text_field :city%>
-    <#%= ff.label :state, 'Estado' %>
-    <#%= ff.text_field :state%>
-    <#%= ff.label :country, 'País' %>
-    <#%= ff.text_field :country%>
-  <#% end %> -->
-
-
-<div id="signin-form-container">
-  <h2>Log in</h2>
-
-  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-    <div class="field">
-      <%= f.label :email %><br />
-      <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-    </div>
-
-    <div class="field">
-      <%= f.label :password %><br />
-      <%= f.password_field :password, autocomplete: "current-password" %>
-    </div>
-
-    <% if devise_mapping.rememberable? %>
-      <div class="field">
-        <%= f.check_box :remember_me %>
-        <%= f.label :remember_me %>
-      </div>
-    <% end %>
-
-    <div class="actions">
-      <%= f.submit "Log in" %>
-    </div>
-  <% end %>  
-</div>
-
+  <%= link_to "Esqueceu a senha?", new_password_path(resource_name) %><br />
 
 </div>
+
+<%= javascript_pack_tag 'signup_forms_radio' %>
+<%= javascript_pack_tag 'users_forms' %>

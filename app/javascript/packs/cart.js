@@ -1,4 +1,4 @@
-$(document).ready(function() {
+document.addEventListener('turbolinks:load', function() {
 	const increaseButtons = document.querySelectorAll('.increase');
 	const decreaseButtons = document.querySelectorAll('.decrease');
 	const deleteButtons = document.querySelectorAll('.delete');
@@ -86,10 +86,10 @@ $.ajax({
 	dataType: 'json',
 	success: function(response) {
 		// console.log(JSON.stringify(response.quantity));
-		const lineItemQty = response.quantity;
+		const lineItemQty = document.querySelector(`#line-item-quantity-${lineItemId}`)
 		lineItemQty.innerHTML = response.quantity;
 
-	 	const total = getLineItemTotalPrice(lineItemQty, lineItemPrice);
+	 	const total = getLineItemTotalPrice(response.quantity, lineItemPrice);
 	 	lineItemTotalPriceHiddenInput.value = total
 	 	lineItemTotalPrice.innerHTML = numberToBRL(total)
 
