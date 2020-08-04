@@ -212,8 +212,8 @@ module Payment
 
     def gerar_boleto(payment, cart, sender_hash, shipping_boolean, shipping_address_attributes, user, reference)
 
-      # payment.notification_url = "https://telegsul.herokuapp.com/notification"
-      payment.notification_url = "http://localhost:3000/notification"
+      payment.notification_url = "https://telegsul.herokuapp.com/notification"
+      # payment.notification_url = "http://localhost:3000/notification"
 
       payment.payment_mode = "default"
 

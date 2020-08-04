@@ -10,12 +10,11 @@ class NotificationController < ApplicationController
 
     status = ['Aguardando Pagamento', 'Em análise', 'Paga', 'Disponível', 'Em disputa', 'Devolvida', 'Cancelada']
 
-    puts Order.last
- 
     if transaction.errors.empty?
       order = Order.where(reference: transaction.reference).last
       order.status = status[transaction.status.id.to_i - 1]
       order.save
+      NotificationMailer.your_order(order.user).deliver_later
     end
  
 

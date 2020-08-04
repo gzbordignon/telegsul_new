@@ -64,15 +64,6 @@ class LineItemsController < ApplicationController
 
   end
 
-  def increase_qty
-    @line_item = LineItem.find(params[:id])
-    @line_item.quantity += 1
-    @line_item.save
-  end
-
-  def decrease_qty
-
-  end
 
   # DELETE /line_items/1
   # DELETE /line_items/1.json

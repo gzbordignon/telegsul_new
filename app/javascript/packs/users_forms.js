@@ -1,7 +1,5 @@
 document.addEventListener('turbolinks:load', function() {
 
-	console.log('lol')
-
 	const fisicaSubmit = document.querySelector('#fisica-submit');
 	const juridicaSubmit = document.querySelector('#juridica-submit');
 
