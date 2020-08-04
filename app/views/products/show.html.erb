@@ -3,7 +3,7 @@
 </div>
 
 
-<% if @product.image %>
+<% if @product.image.attached? %>
   <% cache @product do %>
     <div class="product-show-image">
       <%= image_tag(@product.image, size: '250x250') %>

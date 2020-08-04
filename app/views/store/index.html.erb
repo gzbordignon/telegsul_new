@@ -3,7 +3,7 @@
 <ul class="catalog">
     <% @products.each do |product| %>
         <li>
-          <% if product.image %>
+          <% if product.image.attached? %>
             <div class="catalog-img">
               <%= image_tag(product.image, size: '120x120')  %>
             </div>
