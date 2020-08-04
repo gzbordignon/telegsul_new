@@ -52,10 +52,10 @@ class OrdersController < ApplicationController
     elsif params[:pay_type] == 'Cartão de crédito'
       payment = PagSeguro::CreditCardTransactionRequest.new
       credit_card_payment(payment, @cart, params[:sender_hash_card], params[:card_token], params[:card][:card_options], params[:order][:shipping], Order, current_user, params[:order][:shipping_address_attributes], params[:card])
-      @order = current_user.buildOrder(order_params, '', get_status((payment.status).to_i), 'REF-123', params[:pay_type])
-      @order.add_line_items_from_cart(@cart)
-      response = { order: @order, payment: payment }
       if payment.errors.empty?
+        @order = current_user.buildOrder(order_params, '', get_status((payment.status).to_i), 'REF-123', params[:pay_type])
+        @order.add_line_items_from_cart(@cart)
+        response = { order: @order, payment: payment }
         @order.save
       end
     else

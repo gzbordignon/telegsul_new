@@ -4,7 +4,7 @@ class NotificationMailer < ApplicationMailer
 
 	def your_order(user)
 		@user = user
-		mail(to: @user.email, subject: "This is your order.")
+		mail(to: 'gonzmieato@gmail.com', subject: "This is your order.")
 	end
 	
 end
