@@ -14,7 +14,7 @@ class NotificationController < ApplicationController
       order = Order.where(reference: transaction.reference).last
       order.status = status[transaction.status.id.to_i - 1]
       order.save
-      NotificationMailer.your_order(order.user).deliver_later
+      NotificationMailer.with(order: @order).your_order.deliver_later
     end
  
 
