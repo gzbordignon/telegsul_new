@@ -1,6 +1,6 @@
 class NotificationMailer < ApplicationMailer
 
-	default from: 'notifications@example.com'
+	default from: 'Telegráfica Sul <notifications@example.com>'
 
 	def your_order
 		@order = params[:order]
