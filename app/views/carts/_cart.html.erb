@@ -1,43 +1,63 @@
 <h2>Seu carrinho</h2>
   <table id="cart-table">
-    <% @cart.line_items.each do |line_item| %>
-      <tr id="line-item-<%= line_item.id %>">
-        <%= hidden_field_tag :id, line_item.id %>
-        <%= hidden_field_tag :price, line_item.price %>
-        <%= hidden_field_tag :line_item_quantity, line_item.quantity %>
-        <%= hidden_field_tag :line_item_total_price, line_item.total_price %>
+    <%= render(cart.line_items) %>
+    <!-- <#% if current_page?(cart_path(cart))  %> -->
+    <tfoot>
+        <tr>
+          <th colspan="2">Total:</th>
+          <%= hidden_field_tag :cart_total, cart.all_line_items_total_price, id: 'cart-total-hidden' %>
+          <td id="cart-total"><%= number_to_currency_brl(cart.all_line_items_total_price) %></td>
+        </tr>
+    </tfoot>
+    <!-- <#% end %> -->
+  </table>
+
+<div class="actions">
+  <%= button_to 'Limpar carrinho', cart, method: :delete, data: { confirm: 'Are you sure?' } %>
+</div>
+
+
+
+<!-- <h2>Seu carrinho</h2>
+  <table id="cart-table">
+    <#% @cart.line_items.each do |line_item| %>
+      <tr id="line-item-<#%= line_item.id %>">
+        <#%= hidden_field_tag :id, line_item.id %>
+        <#%= hidden_field_tag :price, line_item.price %>
+        <#%= hidden_field_tag :line_item_quantity, line_item.quantity %>
+        <#%= hidden_field_tag :line_item_total_price, line_item.total_price %>
         
-        <%= form_with(url: line_item_path(line_item), method: :patch, local: true, html: {class: 'item-form'})do |f| %>
-          <td><%= f.submit '+', class: 'increase' %></td> 
-        <% end %>
+        <#%= form_with(url: line_item_path(line_item), method: :patch, local: true, html: {class: 'item-form'})do |f| %>
+          <td><#%= f.submit '+', class: 'increase' %></td> 
+        <#% end %>
 
-        <td id="line-item-quantity-<%= line_item.id %>"><%= line_item.quantity %></td>
+        <td id="line-item-quantity-<#%= line_item.id %>"><#%= line_item.quantity %></td>
 
-        <%= form_with(url: line_item_path(line_item), method: :patch, local: true, html: {class: 'item-form'})do |f| %>
-          <td><%= f.submit '-', class: 'decrease' %></td> 
-        <% end %>
+        <#%= form_with(url: line_item_path(line_item), method: :patch, local: true, html: {class: 'item-form'})do |f| %>
+          <td><#%= f.submit '-', class: 'decrease' %></td> 
+        <#% end %>
 
         <td>
-          <%= line_item.product.title %>
+          <#%= line_item.product.title %>
         </td>
-        <td id="line-item-total-price-<%= (line_item.id).to_s %>" value="lol">
-          <%= number_to_currency_brl(line_item.total_price) %>
+        <td id="line-item-total-price-<#%= (line_item.id).to_s %>" value="lol">
+          <#%= number_to_currency_brl(line_item.total_price) %>
         </td>
-        <%= form_with(url: line_item_path(line_item), method: :delete, local: true) do |f| %>
-          <td><%= f.submit 'x', class: 'delete' %></td>
-        <% end %> 
+        <#%= form_with(url: line_item_path(line_item), method: :delete, local: true) do |f| %>
+          <td><#%= f.submit 'x', class: 'delete' %></td>
+        <#% end %> 
       </tr>
-    <% end %>
+    <#% end %>
     <tfoot>
       <tr>
         <th colspan="2">Total:</th>
-        <td id="all-line-items-price"><%= number_to_currency_brl(@cart.all_line_items_total_price) %></td>
+        <td id="all-line-items-price"><#%= number_to_currency_brl(@cart.all_line_items_total_price) %></td>
       </tr>
     </tfoot>
   </table>
 
 <div class="actions">
-  <%= button_to 'Limpar carrinho', @cart, method: :delete, data: { confirm: 'Are you sure?' } %>
+  <#%= button_to 'Limpar carrinho', @cart, method: :delete, data: { confirm: 'Are you sure?' } %>
   
 </div>
-
+ -->

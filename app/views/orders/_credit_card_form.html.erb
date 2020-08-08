@@ -1,10 +1,10 @@
 <div id="credit-card-form-container" style="display: none;">
   <%= form_with(model: order, local: true, html: {id: 'credit-card-form'}) do |f| %>
   <!-- Hidden fields -->
-    <%= hidden_field_tag :price, @cart.all_line_items_total_price, id: 'price' %>
-    <%= hidden_field_tag :sender_hash_card, nil, id: 'sender-hash-credit-card' %>
+    <%= hidden_field_tag :price, @cart.all_line_items_total_price, id: 'card-price' %>
+    <%= hidden_field_tag 'card[sender_hash]', nil, id: 'sender-hash-credit-card' %>
     <%= hidden_field_tag :session_id, @session_id, id: 'session-id' %>    
-    <%= hidden_field_tag :card_token, nil, id: 'card-token' %>
+    <%= hidden_field_tag 'card[card_token]', nil, id: 'card-token' %>
     <%= hidden_field_tag :pay_type, 'Cartão de crédito' %>
 
     <!-- Error message -->

@@ -1,12 +1,12 @@
 GIT
-  remote: https://github.com/jpaulomotta/ruby
-  revision: 59c30b842430a38dc8bf8870aa2ff93a412297d7
+  remote: https://github.com/gzbordignon/pagseguro-sdk-ruby
+  revision: 18443a8170694e032708b76d890d0c2d8fcf246f
   branch: sandbox-find-by-notification-code
   specs:
     pagseguro-oficial (2.6.1)
       aitch (~> 0.2)
       i18n (~> 0.7)
-      json (~> 1.8)
+      json (~> 2.3)
       nokogiri (~> 1.6)
 
 GEM
@@ -72,7 +72,7 @@ GEM
     aitch (0.5.0)
       nokogiri (>= 1.6.0)
     aws-eventstream (1.1.0)
-    aws-partitions (1.349.0)
+    aws-partitions (1.350.0)
     aws-sdk-core (3.104.3)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
@@ -124,7 +124,7 @@ GEM
     jbuilder (2.10.0)
       activesupport (>= 5.0.0)
     jmespath (1.4.0)
-    json (1.8.6)
+    json (2.3.1)
     listen (3.2.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)

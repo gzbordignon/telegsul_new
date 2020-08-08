@@ -12,12 +12,11 @@ require("packs/image_upload")
 require("packs/get_payment_methods")
 require("packs/boleto")
 require("packs/credit_card")
-require("packs/deposito")
 require("packs/payment_methods_form")
 require("packs/frete_form")
 require("packs/signup_forms_radio")
 require("packs/users_forms")
-require("packs/cart")
+require("packs/functions")
 
 
 

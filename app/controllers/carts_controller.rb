@@ -1,4 +1,5 @@
 class CartsController < ApplicationController
+  include CurrentCart
   before_action :set_cart, only: [:show, :edit, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, with: :invalid_cart
 
@@ -41,10 +42,15 @@ class CartsController < ApplicationController
   # PATCH/PUT /carts/1
   # PATCH/PUT /carts/1.json
   def update
+
+    @cart.update(cart_params)
+
+    response = @cart.all_line_items_total_price
+
     respond_to do |format|
-      if @cart.update(cart_params)
+      if @cart.save
         format.html { redirect_to @cart, notice: 'Cart was successfully updated.' }
-        format.json { render :show, status: :ok, location: @cart }
+        format.json { render json: response }
       else
         format.html { render :edit }
         format.json { render json: @cart.errors, status: :unprocessable_entity }
@@ -71,7 +77,10 @@ class CartsController < ApplicationController
     end
 
     # Only allow a list of trusted parameters through.
+    # def cart_params
+    #   params.fetch(:cart, {})
+    # end    
     def cart_params
-      params.fetch(:cart, {})
+      params.require(:cart).permit(:frete)
     end
 end

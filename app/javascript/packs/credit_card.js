@@ -1,9 +1,13 @@
 document.addEventListener('turbolinks:load', function() {
 
+	creditCardSubmit();
+
+})
+
+function creditCardSubmit() {
 	PagSeguroDirectPayment.setSessionId($("#session-id").val());
 
-	$('#card-number').on('keyup', checkCardNumber);
-
+	document.querySelector('#card-number').addEventListener('input', checkCardNumber)
 
 
 	$('#credit-card-form').on('submit', function(e) {
@@ -13,12 +17,12 @@ document.addEventListener('turbolinks:load', function() {
 
 		sendCardTokenToHiddenInput();
 
-		const shippingForm = $('#shipping-form');
-		const creditCardForm = $('#credit-card-form');
-
-		const data = shippingForm.serialize() + "&&" + creditCardForm.serialize()
-
 		setTimeout(function() {
+			const shippingForm = $('#shipping-form')
+			const creditCardForm = $('#credit-card-form')
+
+			const data = shippingForm.serialize() + "&&" + creditCardForm.serialize()
+
 			$.ajax({
 				method: 'POST',
 				url: '/orders.json', // isso tá mandando pro format.json
@@ -26,22 +30,29 @@ document.addEventListener('turbolinks:load', function() {
 				data: data,
 				dataType: 'json',
 				success: function(response) {
-					console.log(JSON.stringify(response))
-					// console.log(JSON.stringify(response.order.id));
-					console.log(JSON.stringify(response));
-					setTimeout(function() {
-						window.location.href = `/pedido/${response.order.id}`;
-					}, 5000);
+					console.log(JSON.stringify(response.payment.errors))
+					// setTimeout(function() {
+					// 	window.location.href = `/pedido/${response.order.id}`;
+					// }, 5000);
+					if (response.payment.errors.length > 0) {
+						console.log('lol')
+						document.querySelector('#submit-card-form').removeAttribute('disabled');
+					}
+					else {
+						console.log('lul')
+					}
+
 				},
 				error: function(response) {
 					console.log('wtf' + JSON.stringify(response));
 				}
 			})
-		}, 3000)
+		}, 5000)
+
+
 
 	})
-})
-
+}
 
 function checkCardNumber() {
 	PagSeguroDirectPayment.getBrand({
@@ -50,7 +61,7 @@ function checkCardNumber() {
 			console.log(response);
 			if(response['brand']['cvvSize'] > 0) {
 				$('#card-cvv-box').show();
-				getPaymentOptions(response['brand']['name'], $('#price').val());
+				getPaymentOptions(response['brand']['name'], $('#card-price').val());
 				$('#card-options-box').show();
 			}
 		},
@@ -67,7 +78,12 @@ function getPaymentOptions(flag, price) {
     amount: price,
     brand: flag,
     success: function(response) {
-      // cardOptions = document.querySelector('#card-options');
+      cardOptions = document.querySelector('#card-options');
+      if (cardOptions.hasChildNodes()) {
+      	cardOptions.querySelectorAll('option').forEach(option => {
+      		option.remove();
+      	})
+      }
       installments = response['installments'][flag]
         .forEach(function(value) {
           const option = document.createElement('option');

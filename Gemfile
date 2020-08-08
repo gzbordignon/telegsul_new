@@ -24,7 +24,8 @@ gem 'jbuilder', '~> 2.7'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
-gem "pagseguro-oficial", git: 'https://github.com/jpaulomotta/ruby', branch: 'sandbox-find-by-notification-code' 
+# gem "pagseguro-oficial", git: 'https://github.com/jpaulomotta/ruby', branch: 'sandbox-find-by-notification-code' 
+gem "pagseguro-oficial", git: 'https://github.com/gzbordignon/pagseguro-sdk-ruby', branch: 'sandbox-find-by-notification-code'
 # gem "pagseguro-oficial"
 gem "devise"
 gem "mailchimp"
@@ -63,3 +64,5 @@ group :production do
 end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+

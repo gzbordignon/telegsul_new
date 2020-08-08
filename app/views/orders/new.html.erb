@@ -1,12 +1,15 @@
-
+<%= hidden_field_tag :cart_id, @cart.id, id: 'cart-id' %>
 <div>
 	<%= link_to 'Continuar comprando', root_path %>
-	
 </div>
 
 <fieldset>
 
-	<%= render 'carts/cart' %>
+	<div id="cart">
+		<%= render @cart %>
+	</div>
+
+
 
 </fieldset>
 

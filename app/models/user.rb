@@ -14,7 +14,7 @@ class User < ApplicationRecord
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
   validates :name, presence: true, format: { with: VALID_NAME_REGEX, message: "invalid name" }
-  validates :document_number, presence: true
+  validates :document_number, presence: true, uniqueness: true
   validates :document_number, length: { is: 11 }, if: :cpf?, format: { with: /\d/ }
   validates :document_number, length: { is: 14 }, if: :cnpj?, format: { with: /\d/ }
   validates :email, presence: true, format: { with: VALID_EMAIL_REGEX, message: "invalid email" }

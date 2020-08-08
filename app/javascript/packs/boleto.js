@@ -1,6 +1,11 @@
 document.addEventListener('turbolinks:load', function() {
 
-	$('#boleto-form').on('submit', function(e) {
+	boletoSubmit();
+
+})
+
+function boletoSubmit() {
+		$('#boleto-form').on('submit', function(e) {
 	// $('#submit-boleto-form').click(function() {
 		e.preventDefault();
 
@@ -31,9 +36,4 @@ document.addEventListener('turbolinks:load', function() {
 		})
 
 	})
-
-})
-
-function validatesForm() {
-
 }

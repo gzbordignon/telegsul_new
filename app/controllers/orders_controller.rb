@@ -3,8 +3,8 @@ class OrdersController < ApplicationController
   include Payment
   before_action :set_cart, only: [:new, :create]
   before_action :ensure_cart_isnt_empty, only: :new
-  before_action :set_order, only: [:show, :boleto, :edit, :update, :destroy]
   before_action :authenticate_user!
+  # skip_before_action :verify_authenticity_token
 
   # GET /orders
   # GET /orders.json
@@ -15,10 +15,11 @@ class OrdersController < ApplicationController
   # GET /orders/1
   # GET /orders/1.json
   def show
+    @order = current_user.order.find(params[:id])
   end
 
   def boleto
-    @order = Order.find(params[:id])
+    @order = current_user.order.find(params[:id])
   end
 
   # GET /orders/new
@@ -34,51 +35,14 @@ class OrdersController < ApplicationController
   # POST /orders
   # POST /orders.json
   def create
-
     # 4111111111111111
-
-
-
     if params[:pay_type] == 'Boleto'
-      reference = "REF-BOLETO-#{@cart.id}"
-      payment = PagSeguro::BoletoTransactionRequest.new
-      gerar_boleto(payment, @cart, params[:sender_hash_boleto], params[:order][:shipping], params[:order][:shipping_address_attributes], current_user, reference) #retorna payment
-      @order = current_user.buildOrder(order_params, payment.payment_link, get_status((payment.status).to_i), reference, params[:pay_type])
-      @order.add_line_items_from_cart(@cart)
-      response = { order: @order, payment: payment }
-      if payment.errors.empty?
-        @order.save
-      end
+      create_boleto_order(params[:pay_type], @cart, params[:boleto][:sender_hash], params[:order], current_user, order_params)
     elsif params[:pay_type] == 'Cartão de crédito'
-      payment = PagSeguro::CreditCardTransactionRequest.new
-      credit_card_payment(payment, @cart, params[:sender_hash_card], params[:card_token], params[:card][:card_options], params[:order][:shipping], Order, current_user, params[:order][:shipping_address_attributes], params[:card])
-      if payment.errors.empty?
-        @order = current_user.buildOrder(order_params, '', get_status((payment.status).to_i), 'REF-123', params[:pay_type])
-        @order.add_line_items_from_cart(@cart)
-        response = { order: @order, payment: payment }
-        @order.save
-      end
-    else
-      @order = current_user.buildOrder(order_params, '', 'Aguardando pagamento', 'REF-123', params[:pay_type])
-      @order.add_line_items_from_cart(@cart)
-      response = { order: @order, payment: payment }
+      create_card_order(params[:pay_type], @cart, params[:card][:sender_hash], params[:card], params[:order], current_user, order_params)
     end
 
-    respond_to do |format|
-      if @order.save
-        Cart.destroy(session[:cart_id])
-        session[:cart_id] = nil
-        format.html {}
-        format.json { render json: response}
-      else
-        format.html { render :new }
-        format.json { render json: @order.errors,
-          status: :unprocessable_entity }
-      end
-    end
   end
-
-
 
   # PATCH/PUT /orders/1
   # PATCH/PUT /orders/1.json
@@ -117,20 +81,94 @@ class OrdersController < ApplicationController
 
     def ensure_cart_isnt_empty
       if @cart.line_items.empty?
-        redirect_to store_index_url, notice: 'Your cart is empty'
+        redirect_to root_path, notice: 'Your cart is empty'
       end
     end
 
-    # Os valores desses params vem do index.jsx
-    def pay_type_params
-      if order_params[:pay_type] == "Credit Card"
-        params.require(:order).permit(:credit_card_number, :expiration_date)
-      elsif order_params[:pay_type] == "Check"
-        params.require(:order).permit(:routing_number, :account_number)
-      elsif order_params[:pay_type] == "Purchase Order"
-        params.require(:order).permit(:po_number)
+    def create_boleto_order(pay_type, cart, sender_hash, order, user, order_params)
+      reference = "REF-BOLETO-#{cart.id}"
+      payment = PagSeguro::BoletoTransactionRequest.new
+      gerar_boleto(payment, cart, sender_hash, order, user, reference)
+      check_payment_errors(payment, cart, pay_type, user, order_params, reference)
+    end
+
+    def create_card_order(pay_type, cart, sender_hash, card, order, user, order_params)
+      reference = "REF-CREDIT-CARD-#{cart.id}"
+      payment = PagSeguro::CreditCardTransactionRequest.new
+      credit_card_payment(payment, cart, sender_hash, card, order, reference, user)
+      check_payment_errors(payment, cart, pay_type, user, order_params, reference)
+    end
+
+    def check_payment_errors(payment, cart, pay_type, user, order_params, reference)
+      if payment.errors.empty?
+        @order = user.buildOrder(order_params, payment.payment_link, get_status((payment.status).to_i), reference, pay_type)
+        @order.add_line_items_from_cart(cart)
+        response = { order: @order, payment: payment }
+        if @order.save
+          respond_to do |format|
+            Cart.destroy(session[:cart_id])
+            session[:cart_id] = nil
+            format.json { render json: response}
+          end
+        end
       else
-        {}
+        response = { payment: payment }
+        respond_to do |format|
+          format.json { render json: response }
+        end
+      end
+    end
+
+    def gerar_boleto(payment, cart, sender_hash, order, user, reference)
+      payment.notification_url = "https://telegsul.herokuapp.com/notification"
+      # payment.notification_url = "http://localhost:3000/notification"
+      payment.payment_mode = "default"
+      items(cart, payment, order)
+      payment.reference = reference
+      sender(payment, sender_hash, user)
+      shipping_address(payment, order)
+      serializer(payment)
+      payment.create
+      errors(payment)
+      payment
+    end
+
+    def credit_card_payment(payment, cart, sender_hash, card, order, reference, user)
+      payment.payment_mode = "gateway"
+      items(cart, payment, order)
+      payment.reference = reference
+      sender(payment, sender_hash, user)
+      holder_info(payment, card)
+      card_token(payment, card)
+      shipping_address(payment, order)
+      billing_address(payment, user)
+      installments(payment, card)
+      serializer(payment)
+      payment.create
+      errors(payment)
+      payment
+    end
+
+    def get_status(status)
+      case status
+      when 1
+        'Aguardando Pagamento'
+      when 2
+        'Em Análise'
+      when 3
+        'Pago'
+      when 4
+        'Disponível'
+      when 5
+        'Em Disputa'
+      when 6
+        'Devolvida'
+      when 7
+        'Cancelada'
+      when 8
+        'Debitado'
+      when 9
+        'Retenção Temporária'
       end
     end
 end

@@ -1,0 +1,27 @@
+
+  <tr>
+
+<!--     <#%= form_with(url: increase_line_item_qty_path(line_item), method: :patch) do |f| %>
+      <#%= f.submit '+' %>
+    <#% end %> -->
+
+    <%= link_to '+', increase_line_item_qty_path(line_item), method: :patch, remote: true, id: 'increase-qty' %>
+
+    <td><%= line_item.quantity %></td>
+
+    <!-- <#%= render partial: 'line_item/quantity', line_item: line_item %> -->
+
+    <%= link_to '-', decrease_line_item_qty_path(line_item), method: :patch, remote: true %>
+<!--     <#%= form_with(url: decrease_line_item_qty_path(line_item), method: :patch) do |f| %>
+      <#%= f.submit '-' %>
+    <#% end %> -->
+    <td>
+      <%= line_item.product.title %>
+    </td>
+    <td>
+      <%= number_to_currency_brl(line_item.total_price) %>
+    </td>
+    <%= form_with(url: line_item_path(line_item), method: :delete, local: true) do |f| %>
+      <td><%= f.submit 'x', class: 'delete' %></td>
+    <% end %> 
+  </tr>
