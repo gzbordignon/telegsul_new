@@ -63,15 +63,15 @@ class LineItemsController < ApplicationController
     @line_item = @cart.line_items.find(params[:id])
     @line_item.update(quantity: @line_item.quantity.to_i + 1)
     @line_item.save
-    redirect_to @cart
-    # respond_to do |format|
-    #   if @line_item.save
-    #     format.js
-    #   end
-    # end
+    respond_to do |format|
+      if @line_item.save
+        format.js
+      end
+    end
   end
 
   def decrease_qty
+    @line_item = @cart.line_items.find(params[:id])
     @line_item.update(quantity: @line_item.quantity.to_i - 1) if @line_item.quantity > 1
     respond_to do |format|
       if @line_item.save

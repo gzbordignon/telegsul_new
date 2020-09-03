@@ -1,32 +1,25 @@
-<%= hidden_field_tag :cart_id, @cart.id, id: 'cart-id' %>
-<div>
-	<%= link_to 'Continuar comprando', root_path %>
-</div>
-
-<fieldset>
-
-	<div id="cart">
-		<%= render @cart %>
-	</div>
+<section>
 
 
+  <div>
+    <%= link_to 'Continuar comprando', root_path %>
+  </div>
 
-</fieldset>
+  <fieldset>        
+    <div id="cart">
+      <%= render @cart %>     
+    </div>
+  </fieldset>
 
-<fieldset>
-	
-	<h2>Finalizar Pedido</h2>
-
-	<%= render 'frete' %>
-
-	<%= render 'shipping_form', order: @order %>
-
-	<%= render 'payment_methods' %>
-
-	<%= render 'boleto_form', order: @order%>
-
-	<%= render 'credit_card_form', order: @order %>
-
-	<%= render 'deposito_form', order: @order %>
-
-</fieldset>
+  <fieldset>
+    <h2>Finalizar Pedido</h2>
+    <div data-controller="pagseguro shipping pay-type">
+      <input type="hidden" name="session_id" value="<%= @session_id %>" data-target="pagseguro.sessionId">
+      <input type="hidden" name="cart_total" value="<%= @cart.all_line_items_total_price %>" data-target="pagseguro.cartTotal shipping.cartTotal">
+      <%# find the use in stimulus shipping_controller  %>
+      <input type="hidden" name="cart_id" value="<%= @cart.id %>" data-target="shipping.cartId" > 
+      <div id="shipping-method-selector" ></div>
+      <div id="pay-type-selector" ></div>
+    </div>
+  </fieldset>
+</section>

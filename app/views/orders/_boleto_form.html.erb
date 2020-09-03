@@ -1,7 +1,0 @@
-<div id="boleto-form-container" style="display: none;">
-  <%= form_with(model: order, local: true, html: {id: 'boleto-form'}) do |f| %>
-    <%= hidden_field_tag 'boleto[sender_hash]', nil, id: 'sender-hash-boleto' %>
-    <%= hidden_field_tag :pay_type, 'Boleto' %>
-    <%= f.submit 'Gerar boleto', id: 'submit-boleto-form' %>
-  <% end %>
-</div>

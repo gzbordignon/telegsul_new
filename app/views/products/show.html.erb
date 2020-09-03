@@ -41,13 +41,16 @@
     </select>    
   </div>
   <br>
-  <div id="img-upload">
-    <%= f.label :images, 'Faça upload das imagens' %>
-    <%= f.file_field :images, multiple: true, class: 'img-input' %>
+  <div data-controller="image-upload" >
+    <div id="img-upload" >
+      <%= f.label :images, 'Faça upload das imagens' %>
+      <%= f.file_field :images, multiple: true, class: 'img-input', 'data-target': "image-upload.imageInput", 'data-action': "input->image-upload#handleChange"%>
+    </div>
+    <div class="preview" data-target="image-upload.preview">
+      <p>Nenhuma imagem foi seleciona para upload.</p>
+    </div>
   </div>
-  <div class="preview">
-    <p>Nenhuma imagem foi seleciona para upload.</p>
-  </div>
+
   <br><br>
 
   <%= submit_tag 'Adicionar ao carrinho' %>

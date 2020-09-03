@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  get 'logins/new'
   root to: 'store#index'
   devise_for :users, controllers: { registrations: 'registrations' }
   get 'notification/create'

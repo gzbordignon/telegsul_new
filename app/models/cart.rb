@@ -16,7 +16,7 @@ class Cart < ApplicationRecord
   end
 
   def all_line_items_total_price
-    if frete == false
+    if frete == false || frete == nil
       line_items.to_a.sum { |item| item.total_price }
     elsif frete == true
       line_items.to_a.sum { |item| item.total_price } + 10

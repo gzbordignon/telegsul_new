@@ -35,11 +35,20 @@ class OrdersController < ApplicationController
   # POST /orders
   # POST /orders.json
   def create
-    # 4111111111111111
-    if params[:pay_type] == 'Boleto'
-      create_boleto_order(params[:pay_type], @cart, params[:boleto][:sender_hash], params[:order], current_user, order_params)
-    elsif params[:pay_type] == 'Cartão de crédito'
-      create_card_order(params[:pay_type], @cart, params[:card][:sender_hash], params[:card], params[:order], current_user, order_params)
+    #4111111111111111
+    # if params[:order][:pay_type] == 'Boleto'
+    #   create_boleto_order(@cart, params[:sender_hash], params[:order], current_user, order_params)
+    # elsif params[:order][:pay_type] == 'Cartão de crédito'
+    #   create_card_order(@cart, params[:sender_hash], params[:card], params[:order], current_user, order_params)
+    # end
+
+    # @order = current_user.orders.new(order_params)
+    # @order.save
+
+    @response = params
+
+    respond_to do |format|
+      format.json { render json: @response }
     end
 
   end

@@ -1,7 +1,0 @@
-<div id="deposito-form-container" style="display: none;">
-  <%= form_with(model: order, local: true, html: {id: 'deposito-form'}) do |f| %>
-    <%= hidden_field_tag :sender_hash, nil, id: 'sender-hash-deposito' %>
-    <%= hidden_field_tag :pay_type, 'Depósito' %>
-    <%= f.submit 'Gerar deposito', id: 'submit-deposito-form' %>
-  <% end %>
-</div>
